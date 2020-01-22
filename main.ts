@@ -1,4 +1,4 @@
-import { app, Menu as MenuItem } from 'electron';
+import { app, Menu as MenuItem, globalShortcut } from 'electron';
 import { ScreensaverComponent } from './src/app/screensaver/screensaver.component';
 const { Tray, Menu } = require('electron')
 
@@ -7,9 +7,10 @@ let tray = null;
 let screenSaverComponent = new ScreensaverComponent();
 let win = null;
 
-function createWindow() {
+function prepareAplication() {
   tray = new Tray('src/favicon.ico');
   tray.setContextMenu(createMenu());
+  screenSaverComponent.setTimer();
 }
 
 function createMenu(): MenuItem {
@@ -38,8 +39,19 @@ function createMenu(): MenuItem {
   return contextMenu;
 }
 
+function generateShortcuts(){
+  Object.entries(screenSaverComponent.config_json).forEach(([key, value]) => { 
+    globalShortcut.register(value.shortcut, () => {
+      screenSaverComponent.createWindowScreenSaver(value.file);
+    })
+  });
+}
+
 try {
-  app.on('ready', createWindow);
+  app.on('ready', function(){
+    prepareAplication();
+    generateShortcuts();
+  });
 
   app.on('window-all-closed', () => {
     win = null;

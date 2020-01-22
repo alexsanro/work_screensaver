@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, HostListener } from '@angular/core';
 import { BrowserWindow } from 'electron';
 import { ActivatedRoute } from '@angular/router';
 import * as path from 'path';
@@ -17,7 +17,7 @@ export class ScreensaverComponent implements OnInit {
   config_json: JSON = null;
   urlFile = null;
 
-  constructor(private route?: ActivatedRoute) { 
+  constructor(private route?: ActivatedRoute) {
     this.config_json = this.getFileDataConfigJson();
   }
 
@@ -28,31 +28,55 @@ export class ScreensaverComponent implements OnInit {
   createWindowScreenSaver(file: any) {
 
     this.windowSaver = new BrowserWindow({
+      height: 250,
+      width: 250,
       x: 0,
       y: 0,
       show: false,
       focusable: true,
+      alwaysOnTop:true,
       fullscreen: true,
       frame: false,
       webPreferences: {
         nodeIntegration: true
       }
     })
-
+  
     this.windowSaver.loadURL(url.format({
       pathname: path.join('dist/index.html'),
       protocol: 'file:',
       slashes: true,
-      hash: '/screensaver/'+file
+      hash: '/screensaver/' + file
     }));
 
     this.windowSaver.once('ready-to-show', () => {
       this.windowSaver.show();
-    })
+      this.windowSaver.setAlwaysOnTop(true,'screen-saver');
+    })    
   }
 
-  getFileDataConfigJson(): JSON{
+  getFileDataConfigJson(): JSON {
     let rawdata = fs.readFileSync(path.join('dist/assets/data/data_config.json'));
     return JSON.parse(rawdata);
+  }
+
+  @HostListener('mousemove') mousemove() {
+    this.closeWindow();
+  }
+
+  @HostListener('document:keydown', ['$event']) onKeyDown(e) {
+    this.closeWindow();
+  }
+  
+  closeWindow() {
+    window.alert("dd")
+    //this.windowSaver.close();
+  }
+
+  setTimer() {
+    var hola = setInterval(() => {
+      this.createWindowScreenSaver('coffee_cup.gif');
+      clearInterval(hola);
+    }, 5000);
   }
 }
