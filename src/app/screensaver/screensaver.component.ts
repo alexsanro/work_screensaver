@@ -23,6 +23,20 @@ export class ScreensaverComponent implements OnInit {
 
   ngOnInit() {
     this.urlFile = this.route.snapshot.paramMap.get("file");
+    this.closeWindow();
+  }
+
+  closeWindow() {
+    document.addEventListener('keydown', function () {
+      alert("d")
+    });
+    //document.addEventListener('mousedown', sendQuitWindows);
+
+    setTimeout(function () {
+      document.addEventListener('mousemove', function (e) {
+        alert("dddd")  
+      });
+    }, 3000);
   }
 
   createWindowScreenSaver(file: any) {
@@ -34,14 +48,14 @@ export class ScreensaverComponent implements OnInit {
       y: 0,
       show: false,
       focusable: true,
-      alwaysOnTop:true,
+      alwaysOnTop: true,
       fullscreen: true,
       frame: false,
       webPreferences: {
         nodeIntegration: true
       }
     })
-  
+
     this.windowSaver.loadURL(url.format({
       pathname: path.join('dist/index.html'),
       protocol: 'file:',
@@ -51,8 +65,8 @@ export class ScreensaverComponent implements OnInit {
 
     this.windowSaver.once('ready-to-show', () => {
       this.windowSaver.show();
-      this.windowSaver.setAlwaysOnTop(true,'screen-saver');
-    })    
+      this.windowSaver.setAlwaysOnTop(true, 'screen-saver');
+    })
   }
 
   getFileDataConfigJson(): JSON {
@@ -66,11 +80,6 @@ export class ScreensaverComponent implements OnInit {
 
   @HostListener('document:keydown', ['$event']) onKeyDown(e) {
     this.closeWindow();
-  }
-  
-  closeWindow() {
-    window.alert("dd")
-    //this.windowSaver.close();
   }
 
   setTimer() {
