@@ -10,7 +10,6 @@ let win = null;
 function prepareAplication() {
   tray = new Tray('src/favicon.ico');
   tray.setContextMenu(createMenu());
-  screenSaverComponent.setTimer();
 }
 
 function createMenu(): MenuItem {

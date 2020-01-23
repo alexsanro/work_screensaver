@@ -1,8 +1,9 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { BrowserWindow } from 'electron';
+import { BrowserWindow, remote } from 'electron';
 import { ActivatedRoute } from '@angular/router';
 import * as path from 'path';
 import * as url from 'url';
+import { ElectronService } from '../core/services';
 const fs = require('fs');
 
 @Component({
@@ -13,44 +14,58 @@ const fs = require('fs');
 
 export class ScreensaverComponent implements OnInit {
 
+  windows: Object = null;
   windowSaver: BrowserWindow = null;
   config_json: JSON = null;
   urlFile = null;
 
-  constructor(private route?: ActivatedRoute) {
+  constructor(private route?: ActivatedRoute, private electronService?: ElectronService) {
     this.config_json = this.getFileDataConfigJson();
   }
 
   ngOnInit() {
     this.urlFile = this.route.snapshot.paramMap.get("file");
-    this.closeWindow();
+    this.closeWindowEvents();
   }
 
-  closeWindow() {
-    document.addEventListener('keydown', function () {
-      alert("d")
+  closeWindowEvents() {
+    document.addEventListener('keydown', () => {
+      //console.log("ddd");
+      this.closeAllWindows();
     });
     //document.addEventListener('mousedown', sendQuitWindows);
 
-    setTimeout(function () {
-      document.addEventListener('mousemove', function (e) {
-        alert("dddd")  
+    setTimeout(() => {
+      document.addEventListener('mousemove', () => {
+        this.closeAllWindows();
       });
     }, 3000);
+  }
+
+  closeAllWindows() {
+    //console.log("close")
+    //console.log(this.electronService.remote.BrowserWindow.getAllWindows());
+    this.windows = this.electronService.remote.BrowserWindow.getAllWindows();
+    console.log(typeof(this.windows));
+    console.log(this.windows)
+    Object.keys(this.windows).forEach(key => {
+      console.log(this.windows[key].destroy())
+      this.windows[key].destroy();
+    });
   }
 
   createWindowScreenSaver(file: any) {
 
     this.windowSaver = new BrowserWindow({
-      height: 250,
-      width: 250,
+      height: 650,
+      width: 650,
       x: 0,
       y: 0,
       show: false,
       focusable: true,
-      alwaysOnTop: true,
-      fullscreen: true,
-      frame: false,
+      //alwaysOnTop: true,
+      //fullscreen: true,
+      //frame: false,
       webPreferences: {
         nodeIntegration: true
       }
@@ -74,18 +89,4 @@ export class ScreensaverComponent implements OnInit {
     return JSON.parse(rawdata);
   }
 
-  @HostListener('mousemove') mousemove() {
-    this.closeWindow();
-  }
-
-  @HostListener('document:keydown', ['$event']) onKeyDown(e) {
-    this.closeWindow();
-  }
-
-  setTimer() {
-    var hola = setInterval(() => {
-      this.createWindowScreenSaver('coffee_cup.gif');
-      clearInterval(hola);
-    }, 5000);
-  }
 }
