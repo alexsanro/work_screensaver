@@ -15,7 +15,6 @@ const fs = require('fs');
 export class ScreensaverComponent implements OnInit {
 
   windows = null;
-  windowSaver: BrowserWindow = null;
   config_json: JSON = null;
   urlFile = null;
 
@@ -48,51 +47,35 @@ export class ScreensaverComponent implements OnInit {
     }, 3000);
   }
 
-  closeAllWindows() {
-    //this.windows = this.electronService.remote.BrowserWindow.getAllWindows();
-    /*Object.keys(this.windows).forEach(key => {
-      console.log(key);
-      console.log(this.windows[key])
-      //this.windows[key].close();
-    });*/
-
-    this.windows.forEach(element => {
-      element.destroy();
-    });
-    
-  }
-
   createWindowScreenSaver(file: any) {
     var displays = screen.getAllDisplays();
-    var arrayWindows = [];
+
     displays.forEach(element => {
-      this.windowSaver = new BrowserWindow({
-        width: 450,
+      var windowSaver = new BrowserWindow({
         height: 450,
+        width: 450,
         x: element.bounds.x,
         y: element.bounds.y,
         show: false,
         focusable: true,
-        //alwaysOnTop: true,
-        //fullscreen: true,
-        //frame: false,
+        alwaysOnTop: true,
+        fullscreen: true,
+        frame: false,
         webPreferences: {
           nodeIntegration: true
         }
       })
 
-      arrayWindows[element.id] = this.windowSaver;
-
-      arrayWindows[element.id].loadURL(url.format({
+      windowSaver.loadURL(url.format({
         pathname: path.join('dist/index.html'),
         protocol: 'file:',
         slashes: true,
         hash: '/screensaver/' + file
       }));
 
-      arrayWindows[element.id].once('ready-to-show', () => {
-        arrayWindows[element.id].show();
-        //arrayWindows[element.id].setAlwaysOnTop(true, 'screen-saver');
+      windowSaver.once('ready-to-show', () => {
+        windowSaver.show();
+        windowSaver.setAlwaysOnTop(true, 'screen-saver');
       })
     })
 
