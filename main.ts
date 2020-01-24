@@ -1,4 +1,4 @@
-import { app, Menu as MenuItem, globalShortcut } from 'electron';
+import { app, Menu as MenuItem, globalShortcut, ipcMain } from 'electron';
 import { ScreensaverComponent } from './src/app/screensaver/screensaver.component';
 const { Tray, Menu } = require('electron')
 
@@ -55,6 +55,10 @@ try {
   app.on('window-all-closed', () => {
     win = null;
   })
+
+  ipcMain.on('sendCloseAllWindows', function (event) {
+    screenSaverComponent.closeAllWindows();
+  });
 
 } catch (e) {
   // Catch Error

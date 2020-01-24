@@ -29,6 +29,7 @@ export class ElectronService {
 
       this.childProcess = (<any>window).require('child_process');
       this.fs = (<any>window).require('fs');
+
     }
   }
 }

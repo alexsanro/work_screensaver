@@ -1,5 +1,5 @@
 import { Component, OnInit, HostListener } from '@angular/core';
-import { BrowserWindow, remote } from 'electron';
+import { BrowserWindow, screen, ipcRenderer } from 'electron';
 import { ActivatedRoute } from '@angular/router';
 import * as path from 'path';
 import * as url from 'url';
@@ -14,7 +14,7 @@ const fs = require('fs');
 
 export class ScreensaverComponent implements OnInit {
 
-  windows: Object = null;
+  windows = null;
   windowSaver: BrowserWindow = null;
   config_json: JSON = null;
   urlFile = null;
@@ -30,58 +30,72 @@ export class ScreensaverComponent implements OnInit {
 
   closeWindowEvents() {
     document.addEventListener('keydown', () => {
-      //console.log("ddd");
-      this.closeAllWindows();
+      ipcRenderer.send('sendCloseAllWindows');
     });
-    //document.addEventListener('mousedown', sendQuitWindows);
+
+    document.addEventListener('mousedown', () => {
+      ipcRenderer.send('sendCloseAllWindows');
+    });
 
     setTimeout(() => {
-      document.addEventListener('mousemove', () => {
-        this.closeAllWindows();
+      var treshold = 5;
+      document.addEventListener('mousemove', (e) => {
+        if (treshold * treshold < e.movementX * e.movementX
+          + e.movementY * e.movementY) {
+          ipcRenderer.send('sendCloseAllWindows');
+        }
       });
     }, 3000);
   }
 
   closeAllWindows() {
-    //console.log("close")
-    //console.log(this.electronService.remote.BrowserWindow.getAllWindows());
-    this.windows = this.electronService.remote.BrowserWindow.getAllWindows();
-    console.log(typeof(this.windows));
-    console.log(this.windows)
-    Object.keys(this.windows).forEach(key => {
-      console.log(this.windows[key].destroy())
-      this.windows[key].destroy();
+    //this.windows = this.electronService.remote.BrowserWindow.getAllWindows();
+    /*Object.keys(this.windows).forEach(key => {
+      console.log(key);
+      console.log(this.windows[key])
+      //this.windows[key].close();
+    });*/
+
+    this.windows.forEach(element => {
+      element.destroy();
     });
+    
   }
 
   createWindowScreenSaver(file: any) {
+    var displays = screen.getAllDisplays();
+    var arrayWindows = [];
+    displays.forEach(element => {
+      this.windowSaver = new BrowserWindow({
+        width: 450,
+        height: 450,
+        x: element.bounds.x,
+        y: element.bounds.y,
+        show: false,
+        focusable: true,
+        //alwaysOnTop: true,
+        //fullscreen: true,
+        //frame: false,
+        webPreferences: {
+          nodeIntegration: true
+        }
+      })
 
-    this.windowSaver = new BrowserWindow({
-      height: 650,
-      width: 650,
-      x: 0,
-      y: 0,
-      show: false,
-      focusable: true,
-      //alwaysOnTop: true,
-      //fullscreen: true,
-      //frame: false,
-      webPreferences: {
-        nodeIntegration: true
-      }
+      arrayWindows[element.id] = this.windowSaver;
+
+      arrayWindows[element.id].loadURL(url.format({
+        pathname: path.join('dist/index.html'),
+        protocol: 'file:',
+        slashes: true,
+        hash: '/screensaver/' + file
+      }));
+
+      arrayWindows[element.id].once('ready-to-show', () => {
+        arrayWindows[element.id].show();
+        //arrayWindows[element.id].setAlwaysOnTop(true, 'screen-saver');
+      })
     })
 
-    this.windowSaver.loadURL(url.format({
-      pathname: path.join('dist/index.html'),
-      protocol: 'file:',
-      slashes: true,
-      hash: '/screensaver/' + file
-    }));
-
-    this.windowSaver.once('ready-to-show', () => {
-      this.windowSaver.show();
-      this.windowSaver.setAlwaysOnTop(true, 'screen-saver');
-    })
   }
 
   getFileDataConfigJson(): JSON {
