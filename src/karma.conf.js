@@ -30,6 +30,7 @@ module.exports = function (config) {
     customLaunchers: {
       AngularElectron: {
         base: 'Electron',
+        flags: ['--no-sandbox'],
         browserWindowOptions: {
           webPreferences: {
             nodeIntegration: true,

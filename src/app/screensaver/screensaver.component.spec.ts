@@ -2,17 +2,8 @@ import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing'
 import { ScreensaverComponent } from './screensaver.component';
 import { ActivatedRoute } from '@angular/router';
 import { ElectronService } from '../core/services';
-import { BrowserWindow, ipcMain, ipcRenderer } from 'electron';
 import * as path from 'path';
 import * as url from 'url';
-import { By } from '@angular/platform-browser';
-
-class MockUpMain{
-  createWindows(){
-
-  }
-}
-
 
 describe('ScreensaverComponent', () => {
   let component: ScreensaverComponent;
@@ -117,4 +108,8 @@ describe('ScreensaverComponent', () => {
     //console.log(fixture.debugElement.query);
   }))
 
+  /*it('should be created', inject([SomeService], (service: SomeService) => {
+    expect(service).toBeTruthy();
+  }));*/
+  
 });

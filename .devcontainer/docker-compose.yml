@@ -1,0 +1,16 @@
+version: '3.7'
+services:
+  workscreen:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: workscreen
+    tty: true
+    ports:
+      - "4200:4200"
+    volumes:
+      - ../:/tmp/workspace
+      - node_linux:/tmp/workspace/node_modules
+volumes:
+  node_linux:
+      
