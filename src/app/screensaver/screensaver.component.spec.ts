@@ -1,9 +1,10 @@
-import { async, ComponentFixture, TestBed, inject } from '@angular/core/testing';
+import { async, ComponentFixture, TestBed, inject, tick, fakeAsync } from '@angular/core/testing';
 import { ScreensaverComponent } from './screensaver.component';
 import { ActivatedRoute } from '@angular/router';
 import { ElectronService } from '../core/services';
 import * as path from 'path';
 import * as url from 'url';
+import { ipcRenderer } from 'electron';
 
 describe('ScreensaverComponent', () => {
   let component: ScreensaverComponent;
@@ -15,14 +16,15 @@ describe('ScreensaverComponent', () => {
       }
     }
   }
+  let windowSaver = [];
 
-  beforeEach(async(() => {
+  beforeEach(() => {
     TestBed.configureTestingModule({
       declarations: [ScreensaverComponent],
       providers: [{ provide: ActivatedRoute, useValue: mockActivatedRoute }]
     })
       .compileComponents();
-  }));
+  });
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ScreensaverComponent);
@@ -30,21 +32,11 @@ describe('ScreensaverComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
-
-  /*it('browser', () => {
-    var preuba = new ElectronService();
-    const screen = preuba.remote.screen;
-    component.createWindowScreenSaver('gif.gif');
-  });*/
-
-  it('Create Multiple Windows Screen', () => {
+  //MAIN.JS MOCKUP NEW WINDOW
+  beforeEach(() => {
     var electronService = new ElectronService();
     var displays = electronService.remote.screen.getAllDisplays();
-
-    var windowSaver = [];
+    console.log("Displays = " + displays.length)
     displays.forEach((value, key) => {
       windowSaver[key] = new electronService.remote.BrowserWindow({})
 
@@ -55,61 +47,64 @@ describe('ScreensaverComponent', () => {
         hash: '/screensaver/coffee_cup.gif'
       }));
     })
-
-    expect(displays.length).toEqual(windowSaver.length); 
   })
 
-  it('Close windows with events DOM',async(() => {
-    /*var electronService = new ElectronService();
-    var displays = electronService.remote.screen.getAllDisplays();
+  afterEach(() => {
+    windowSaver = [];
+  })
 
-    var windowSaver = [];
-    displays.forEach((value, key) => {
-      windowSaver[key] = new electronService.remote.BrowserWindow({})
+  /*it('should create', () => {
+    expect(component).toBeTruthy();
+  });*/
 
-      windowSaver[key].loadURL(url.format({
-        pathname: path.join(__dirname, 'dist/index.html'),
-        protocol: 'file:',
-        slashes: true,
-        hash: '/screensaver/coffee_cup.gif'
-      }));
-    })*/
 
-    /*var electronService = new ElectronService();
-    electronService.remote.ipcMain.on('sendCloseAllWindows', function (event) {
-      console.log("ddddd");
+  it('Close windows with keydown', function () {
+    var arrayWindows = windowSaver;
+    console.log("KEYDOWN: " + new ElectronService().remote.BrowserWindow.getAllWindows().length)
+    spyOn(ipcRenderer, 'send').and.callFake(function () {
+      arrayWindows.forEach((element, key) => {
+        arrayWindows.splice(key, 1);
+        element.destroy();
+      });
     });
 
-    const event = new KeyboardEvent('click', {
-      key: 'Enter',
+    document.dispatchEvent(new Event('keydown'));
+    expect(arrayWindows.length).toEqual(0);
+  });
+
+  it('Close windows with mousedown', function () {
+    console.log("MOUSEDOWN: " + new ElectronService().remote.BrowserWindow.getAllWindows().length)
+    var arrayWindows = windowSaver;
+    spyOn(ipcRenderer, 'send').and.callFake(function () {
+      arrayWindows.forEach((element, key) => {
+        arrayWindows.splice(key, 1);
+        element.destroy();
+      });
     });
-  
-    document.querySelector('.container').dispatchEvent(event);
-    console.log(document.querySelector(".container"))
-
-
-*/
-
-    document.addEventListener('click',()=>{
-      console.log("JHOLJFKAJDFL")
-    })
-    document.dispatchEvent(new Event('click'));
-    //console.log(document.getElementsByClassName("container"))
+    document.dispatchEvent(new Event('mousedown'));
     
-    /*fixture.detectChanges();
-    fixture.debugElement.triggerEventHandler('keydown', { code: 'Escape' });
-    fixture.debugElement.triggerEventHandler('keydown', { code: 'KeyA' });
-    var html = fixture.debugElement.query(By.all());
-    
-    html.triggerEventHandler('click', null);
-    fixture.detectChanges();
-    console.log(component.prueba)*/
-    //console.log(html)
-    //console.log(fixture.debugElement.query);
-  }))
+    expect(arrayWindows.length).toEqual(0);
+  });
+
+  it('Close windows with mousemove', (done) => {
+    console.log("MOUSEMOVE: " + new ElectronService().remote.BrowserWindow.getAllWindows().length)
+    var arrayWindows = windowSaver;
+    spyOn(ipcRenderer, 'send').and.callFake(function () {
+      arrayWindows.forEach((element, key) => {
+        arrayWindows.splice(key, 1);
+        element.destroy();
+      });
+    });
+
+    setTimeout(() => {
+      document.dispatchEvent(new MouseEvent("mousemove", <MouseEventInit>{ movementX: 10, movementY: 10 }));
+      expect(arrayWindows.length).toEqual(0)
+      done();
+    }, 2100);
+  });
 
   /*it('should be created', inject([SomeService], (service: SomeService) => {
     expect(service).toBeTruthy();
   }));*/
-  
+
 });

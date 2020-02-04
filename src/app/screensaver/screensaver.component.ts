@@ -11,39 +11,32 @@ import { ActivatedRoute } from '@angular/router';
 export class ScreensaverComponent implements OnInit {
 
   urlFile = null;
-  prueba = null;
-  constructor(private route?: ActivatedRoute) {
-
-  }
+  constructor(private route?: ActivatedRoute) {}
 
   ngOnInit() {
-    console.log("INIT")
     this.urlFile = this.route.snapshot.paramMap.get("file");
     this.closeWindowEvents();
   }
 
   closeWindowEvents() {
-    console.log("LISTENER")
+    console.log("events")
     document.addEventListener('keydown', () => {
-      console.log("KEYDONW")
-      alert("ddddd");
+      console.log("keydown")
       ipcRenderer.send('sendCloseAllWindows');
     });
 
     document.addEventListener('mousedown', () => {
+      console.log("mousevent")
       ipcRenderer.send('sendCloseAllWindows');
     });
-
-    document.addEventListener("click", () =>{
-      this.prueba = "hola"
-      alert("ddddddadfafd click");
-    })
-
+    
     setTimeout(() => {
+      console.log("time")
       var treshold = 5;
       document.addEventListener('mousemove', (e) => {
         if (treshold * treshold < e.movementX * e.movementX
           + e.movementY * e.movementY) {
+        console.log("mouse")
           ipcRenderer.send('sendCloseAllWindows');
         }
       });

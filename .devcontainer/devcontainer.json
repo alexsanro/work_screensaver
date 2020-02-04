@@ -2,7 +2,7 @@
     "name": "workscreen",
     "dockerComposeFile": ["docker-compose.yml"],
     "service": "workscreen",
-    "workspaceFolder": "/tmp/workspace",
+    "workspaceFolder": "/app",
     "extensions": [
         "ms-azuretools.vscode-docker"
     ],
