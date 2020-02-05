@@ -91,6 +91,7 @@
     "node": ">=10.9.0"
   },
   "dependencies": {
-    "karma-phantomjs-launcher": "1.0.4"
+    "karma-phantomjs-launcher": "1.0.4",
+    "karma-spec-reporter": "0.0.32"
   }
 }
