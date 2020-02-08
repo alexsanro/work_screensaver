@@ -36,9 +36,9 @@ describe('ScreensaverComponent', () => {
     windowSaver = [];
   })
 
-  /*it('should create', () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
-  });*/
+  });
 
 
   it('Close windows with keydown', function () {
@@ -73,9 +73,5 @@ describe('ScreensaverComponent', () => {
       done();
     }, 2100);
   });
-
-  /*it('should be created', inject([SomeService], (service: SomeService) => {
-    expect(service).toBeTruthy();
-  }));*/
 
 });

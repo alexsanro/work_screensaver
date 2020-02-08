@@ -45,5 +45,11 @@ RUN pip install python-dbusmock
 ADD tools/xvfb-init.sh /etc/init.d/xvfb
 RUN chmod a+x /etc/init.d/xvfb
 
+RUN curl --insecure -o ./sonarscanner.zip -L https://binaries.sonarsource.com/Distribution/sonar-scanner-cli/sonar-scanner-cli-3.0.3.778-linux.zip && \
+    unzip sonarscanner.zip && \
+    rm sonarscanner.zip && \
+    mv sonar-scanner-3.0.3.778-linux /usr/lib/sonar-scanner && \
+    ln -s /usr/lib/sonar-scanner/bin/sonar-scanner /usr/local/bin/sonar-scanner
+
 #USER builduser
 WORKDIR /app

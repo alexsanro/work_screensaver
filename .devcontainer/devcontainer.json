@@ -2,6 +2,7 @@
     "name": "workscreen",
     "dockerComposeFile": ["docker-compose.yml"],
     "service": "workscreen",
+    "postCreateCommand": ".devcontainer/tools/xvfb-init.sh start",
     "workspaceFolder": "/app",
     "extensions": [
         "ms-azuretools.vscode-docker"
