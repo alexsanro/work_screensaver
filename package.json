@@ -64,7 +64,7 @@
     "codelyzer": "5.1.2",
     "conventional-changelog-cli": "2.0.32",
     "core-js": "3.1.4",
-    "electron": "7.1.10",
+    "electron": "8.0.0",
     "electron-builder": "21.2.0",
     "electron-reload": "1.5.0",
     "eslint": "6.6.0",
@@ -91,7 +91,23 @@
     "node": ">=10.9.0"
   },
   "dependencies": {
+    "iohook": "0.6.5",
     "karma-phantomjs-launcher": "1.0.4",
     "karma-spec-reporter": "0.0.32"
+  },
+  "iohook": {
+    "targets": [
+      "node-72",
+      "electron-76"
+    ],
+    "platforms": [
+      "win32",
+      "darwin",
+      "linux"
+    ],
+    "arches": [
+      "x64",
+      "ia32"
+    ]
   }
 }

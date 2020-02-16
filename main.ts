@@ -1,7 +1,7 @@
 import { app, Menu, screen, Tray, globalShortcut, ipcMain, BrowserWindow } from 'electron';
 const fs = require('fs');
 import * as path from 'path';
-import * as url from 'url';
+const ioHook = require('iohook');
 
 function loadJsonConfig() {
   let rawdata = fs.readFileSync(path.join(__dirname, 'dist/assets/data/data_config.json'));
@@ -40,32 +40,38 @@ function generateBrowsersScreens(file: String) {
 
   displays.forEach(element => {
     var windowSaver = new BrowserWindow({
-      height: 450,
-      width: 450,
-      x: element.bounds.x,
-      y: element.bounds.y,
-      show: false,
+      show: true,
       focusable: true,
-      alwaysOnTop: true,
       fullscreen: true,
       frame: false,
+      kiosk: true,
       webPreferences: {
         nodeIntegration: true
       }
     })
 
-    windowSaver.loadURL(url.format({
-      pathname: path.join(__dirname,'dist/index.html'),
-      protocol: 'file:',
-      slashes: true,
-      hash: '/screensaver/' + file
-    }));
+    windowSaver.loadFile(__dirname + '/dist/assets/' + file);
+    windowSaver.setAlwaysOnTop(true, 'screen-saver');
 
-    windowSaver.once('ready-to-show', () => {
-      windowSaver.show();
-      windowSaver.setAlwaysOnTop(true, 'screen-saver');
+    windowSaver.webContents.on("did-finish-load", function(){
+      ioHookScripts();
     })
   })
+}
+
+function ioHookScripts(){
+  ioHook.on('keyup', event => {
+    closeWindows();
+  });
+
+  setTimeout(() => {
+    var treshold = 5;
+    ioHook.on('mousemove', event => {
+      closeWindows();
+    });
+  }, 2000);
+
+  ioHook.start();
 }
 
 function generateShortcuts() {
@@ -77,27 +83,29 @@ function generateShortcuts() {
   });
 }
 
+function closeWindows() {
+  var windows = BrowserWindow.getAllWindows();
+  windows.forEach(element => {
+    element.destroy();
+  });
+  
+  ioHook.stop();
+}
+
 try {
 
   let tray: Tray = null;
   app.on('ready', function () {
-    tray = new Tray(__dirname+'/dist/favicon.ico');
+    tray = new Tray(__dirname + '/dist/favicon.ico');
     tray.setContextMenu(generateMenu());
 
     generateShortcuts();
   });
-
-  ipcMain.on('sendCloseAllWindows', function (event) {
-    var windows = BrowserWindow.getAllWindows();
-    windows.forEach(element => {
-      element.destroy();
-    });
-  });
-
+  
   app.on('window-all-closed', () => { })
 
 } catch (e) {
   // Catch Error
-   throw e;
+  throw e;
 }
 

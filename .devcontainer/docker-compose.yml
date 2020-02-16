@@ -10,7 +10,7 @@ services:
       - "4200:4200"
     volumes:
       - ../:/app
-      - node_linux:/app/node_modules
+      - node_modules:/app/node_modules
 volumes:
-  node_linux:
+  node_modules:
       
