@@ -53,25 +53,24 @@ function generateBrowsersScreens(file: String) {
     windowSaver.loadFile(__dirname + '/dist/assets/' + file);
     windowSaver.setAlwaysOnTop(true, 'screen-saver');
 
-    windowSaver.webContents.on("did-finish-load", function(){
+    windowSaver.webContents.on("did-finish-load", function () {
       ioHookScripts();
     })
   })
 }
 
-function ioHookScripts(){
-  ioHook.on('keyup', event => {
-    closeWindows();
-  });
-
+function ioHookScripts() {
   setTimeout(() => {
-    var treshold = 5;
+    ioHook.on('keydown', event => {
+      closeWindows();
+    });
+
     ioHook.on('mousemove', event => {
       closeWindows();
     });
-  }, 2000);
 
-  ioHook.start();
+    ioHook.start();
+  }, 1000);
 }
 
 function generateShortcuts() {
@@ -88,7 +87,7 @@ function closeWindows() {
   windows.forEach(element => {
     element.destroy();
   });
-  
+
   ioHook.stop();
 }
 
@@ -101,7 +100,7 @@ try {
 
     generateShortcuts();
   });
-  
+
   app.on('window-all-closed', () => { })
 
 } catch (e) {

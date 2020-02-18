@@ -4,11 +4,6 @@ import { PageNotFoundComponent } from './shared/components';
 
 const routes: Routes = [
   {
-    path: 'screenSaver/:file',
-    redirectTo: 'screensaver',
-    pathMatch: 'full'
-  },
-  {
     path: '**',
     component: PageNotFoundComponent
   }
