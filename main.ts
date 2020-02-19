@@ -2,6 +2,7 @@ import { app, Menu, screen, Tray, globalShortcut, ipcMain, BrowserWindow } from 
 const fs = require('fs');
 import * as path from 'path';
 const ioHook = require('iohook');
+import * as url from 'url';
 
 function loadJsonConfig() {
   let rawdata = fs.readFileSync(path.join(__dirname, 'dist/assets/data/data_config.json'));
@@ -23,7 +24,14 @@ function generateMenu(): Menu {
     arrayMenu.push(json);
   });
 
-  arrayMenu.push({
+  arrayMenu.push(
+    {
+      label: 'Config',
+      click: function(){
+        newWindowConfig();
+      }
+    },
+    {
     label: 'Close',
     click: function () {
       app.quit();
@@ -33,6 +41,30 @@ function generateMenu(): Menu {
   var contextMenu = Menu.buildFromTemplate(arrayMenu);
 
   return contextMenu;
+}
+
+function newWindowConfig(): BrowserWindow {
+  var configWindow = new BrowserWindow({
+    height: 700,
+    width: 500,
+    show: true,
+    title: 'Config',
+    focusable: true,
+    //frame: false,
+    movable: true,
+    webPreferences: {
+      nodeIntegration: true
+    }
+  })
+
+  configWindow.loadURL(url.format({
+    pathname: path.join(__dirname,'dist/index.html'),
+    protocol: 'file:',
+    slashes: true,
+    hash: '/config'
+  }));
+  
+  return configWindow
 }
 
 function generateBrowsersScreens(file: String) {
