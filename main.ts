@@ -57,6 +57,8 @@ function newWindowConfig(): BrowserWindow {
     }
   })
 
+  configWindow.webContents.openDevTools();
+
   configWindow.loadURL(url.format({
     pathname: path.join(__dirname,'dist/index.html'),
     protocol: 'file:',
