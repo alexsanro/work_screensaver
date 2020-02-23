@@ -1,3 +1,10 @@
 <div class="container">
-    <input name="shortcutInput[]" class="shortcutInput" (keyup)="onkeyUpShortcut($event)" (keydown)="onKeyDownShortcut($event)"/>
+
+    <div *ngFor="let item of config">
+        <label for="">Name:</label><br>
+        <input type="text" name="name[]" value="{{item.label}}">
+        <br>
+        <input name="shortcutInput[]" class="shortcutInput" (keyup)="onkeyUpShortcut($event)" 
+        (keydown)="onKeyDownShortcut($event)" value="{{item.shortcut}}"/>
+    </div>    
 </div>

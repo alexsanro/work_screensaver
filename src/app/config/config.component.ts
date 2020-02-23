@@ -1,5 +1,4 @@
 import { Component, OnInit } from '@angular/core';
-import { Config } from './config';
 import * as path from 'path';
 const fs = require('fs');
 
@@ -11,15 +10,16 @@ const fs = require('fs');
 export class ConfigComponent implements OnInit {
 
   shortCutKeyDown: string = null;
+  config = null;
   
   constructor() { }
 
   ngOnInit() {
-    console.log(this.getConfigFile())
+    this.config = this.getConfigFile();
+    console.log(this.config)
   }
 
   onKeyDownShortcut(event: any){
-    //console.log(event.key)
     if(event.ctrlKey == true && event.altKey == true && /^\w{1}$/.test(event.key)){
       this.shortCutKeyDown = event.key;
     }
@@ -32,7 +32,7 @@ export class ConfigComponent implements OnInit {
     }
   }
 
-  getConfigFile(): Config{
+  getConfigFile(){
     var rawdata = fs.readFileSync(path.join(__dirname, '/assets/data/data_config.json'));
     return JSON.parse(rawdata);
   }
