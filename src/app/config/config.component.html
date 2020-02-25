@@ -1,10 +1,39 @@
-<div class="container">
+<header id="titlebar">
+    <div id="drag-region">
+        <div id="window-controls">
+            <div class="button" id="min-button">
+                <span>&#xE921;</span>
+            </div>
+            <div class="button" id="max-button">
+                <span>&#xE922;</span>
+            </div>
+            <div class="button" id="restore-button">
+                <span>&#xE923;</span>
+            </div>
+            <div class="button" id="close-button">
+                <span>&#xE8BB;</span>
+            </div>
+        </div>
+    </div>
+</header>
 
-    <div *ngFor="let item of config">
-        <label for="">Name:</label><br>
-        <input type="text" name="name[]" value="{{item.label}}">
-        <br>
-        <input name="shortcutInput[]" class="shortcutInput" (keyup)="onkeyUpShortcut($event)" 
-        (keydown)="onKeyDownShortcut($event)" value="{{item.shortcut}}"/>
-    </div>    
+
+<div id="main">
+    <form [formGroup]="configForm">
+        <div *ngFor="let item of configFile">
+            <label for="">Name:</label><br>
+            <input type="text" formControlName="nameLabel" value="{{item.label}}">
+            <br>
+            <input formControlName="shortcutInput" class="shortcutInput" (keyup)="onkeyUpShortcut($event)"
+                (keydown)="onKeyDownShortcut($event)" value="{{item.shortcut}}" />
+
+            <input type="file" formControlName="fileScreenSaver">
+
+        </div>
+        <button type="submit">adfaf</button>
+    </form>
+
+    <button (click)="newFields()">Añadir</button>
+    <br>
+    <button (click)="saveConfig()">Guardar</button>
 </div>

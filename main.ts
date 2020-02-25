@@ -50,7 +50,8 @@ function newWindowConfig(): BrowserWindow {
     show: true,
     title: 'Config',
     focusable: true,
-    //frame: false,
+    frame: false,
+    backgroundColor: '#FFF',
     movable: true,
     webPreferences: {
       nodeIntegration: true
