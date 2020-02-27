@@ -2,6 +2,7 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl } from '@angular/forms';
 import * as path from 'path';
 import { ElectronService } from '../core/services';
+import { throwError } from 'rxjs';
 const fs = require('fs');
 
 @Component({
@@ -25,11 +26,23 @@ export class ConfigComponent implements OnInit {
     let cred = this.configForm.controls.itemsConfig as FormArray;
 
     this.getConfigFile().forEach(element => {
-      element.fileConfig = element.file;
-      element.file = "";
-
-      cred.push(this.builder.group(element));
+      //element.fileConfig = element.file;
+      //element.file = "";
+      cred.push(this.builder.group({
+        label: '',
+        shortcut: '',
+        file: '',
+        fileConfig: 'd'
+      }));
     });
+
+    var formArray = this.configForm.controls.itemsConfig as FormArray;
+    formArray.push(this.builder.group({
+      label: '',
+      shortcut: '',
+      file: '',
+      fileConfig: ''
+    }));
   }
 
   onKeyDownShortcut(event: any) {
@@ -75,15 +88,26 @@ export class ConfigComponent implements OnInit {
       console.log('source.txt was copied to destination.txt');
     });*/
 
-    console.log(this.configForm.value)
-    //console.log(this.configForm)
+    console.log(this.configForm.controls.itemsConfig)
+    var configFormValues = this.configForm.controls.itemsConfig.value;
+
     /*Object.keys(this.configForm.value).forEach(key => {
       
     });*/
 
-    this.configForm.value.itemsConfig.forEach(element => {
-      console.log(element)
+    this.checkEmptyValuesConfigForm();  
+
+    configFormValues.forEach((element, key) => {
+      if(element.file == ""){
+        element.file = element.fileConfig;
+        delete element.fileConfig;
+      }else{
+        this.copyFileToAssets(element.file);
+        element.file = path.basename(element.file);
+      }
     });
+
+    //console.log(ordererJsonConfig);
   }
 
   minimizeWindow(){
@@ -92,6 +116,30 @@ export class ConfigComponent implements OnInit {
 
   closeWindow(){
     this.electronService.remote.BrowserWindow.getFocusedWindow().close();
+  }
+
+  checkEmptyValuesConfigForm(){
+    
+    this.configForm.value.itemsConfig.forEach(element => {
+      if(element.label == "" || element.shortcut == "" || (element.file == "" && element.fileConfig == "")){
+        this.electronService.remote.dialog.showErrorBox('Error 202', 'There are many fields empties');
+        throw new Error("There are empty values!!");
+      }
+    });
+
+    return true;
+  }
+
+  copyFileToAssets(positionInput: number){
+    //console.log("ddd")
+    //console.log(document.getElementsByTagName('input'))
+    //document.getElementsByName("fileScreenSaver[]")[0];
+    ///console.log(file);
+    
+    /*fs.copyFile(file[0].name, 'destination.txt', (err) => {
+      if (err) throw err;
+      console.log('source.txt was copied to destination.txt');
+    });*/
   }
 
 }
