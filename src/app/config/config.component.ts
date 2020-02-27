@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
-import * as path from 'path';
 import { FormBuilder, FormArray, FormGroup, FormControl } from '@angular/forms';
+import * as path from 'path';
+import { ElectronService } from '../core/services';
 const fs = require('fs');
 
 @Component({
@@ -13,24 +14,22 @@ const fs = require('fs');
 export class ConfigComponent implements OnInit {
 
   shortCutKeyDown: string = null;
-  configFile: Array<any>;
 
-  /*signUpForm = this.builder.group({
-    name: [''],
-    email: [''],
-    password: ['']
-  })*/
-
-  configForm : FormGroup = new FormGroup({
-    nameLabel: new FormControl([]),
-    shortcutInput: new FormControl([]),
-    fileScreenSaver: new FormControl([])
+  configForm: FormGroup = this.builder.group({
+    itemsConfig: this.builder.array([])
   })
 
-  constructor(protected builder: FormBuilder) { }
+  constructor(protected builder: FormBuilder, protected electronService: ElectronService) { }
 
   ngOnInit() {
-    this.configFile = this.getConfigFile();
+    let cred = this.configForm.controls.itemsConfig as FormArray;
+
+    this.getConfigFile().forEach(element => {
+      element.fileConfig = element.file;
+      element.file = "";
+
+      cred.push(this.builder.group(element));
+    });
   }
 
   onKeyDownShortcut(event: any) {
@@ -43,6 +42,7 @@ export class ConfigComponent implements OnInit {
   onkeyUpShortcut(event: any) {
     if (this.shortCutKeyDown != null) {
       event.target.value = "Alt+CommandOrControl+" + this.shortCutKeyDown;
+      this.shortCutKeyDown = null;
     }
   }
 
@@ -51,12 +51,23 @@ export class ConfigComponent implements OnInit {
     return JSON.parse(rawdata);
   }
 
-  newFields() {
+  addNewGroupFields() {
     this.shortCutKeyDown = null;
-    this.configFile.push({});
+
+    var formArray = this.configForm.controls.itemsConfig as FormArray;
+    formArray.push(this.builder.group({
+      label: '',
+      shortcut: '',
+      file: '',
+      fileConfig: ''
+    }));
   }
 
-  saveConfig() {
+  trackByFn(index, item) {
+    return index;  
+  }
+
+  saveConfiguration() {
     /*var file: any = document.getElementsByName("fileScreenSaver[]")[0];
     
     fs.copyFile(file.files[0].name, 'destination.txt', (err) => {
@@ -69,6 +80,18 @@ export class ConfigComponent implements OnInit {
     /*Object.keys(this.configForm.value).forEach(key => {
       
     });*/
+
+    this.configForm.value.itemsConfig.forEach(element => {
+      console.log(element)
+    });
   }
-  
+
+  minimizeWindow(){
+    this.electronService.remote.BrowserWindow.getFocusedWindow().minimize();
+  }
+
+  closeWindow(){
+    this.electronService.remote.BrowserWindow.getFocusedWindow().close();
+  }
+
 }

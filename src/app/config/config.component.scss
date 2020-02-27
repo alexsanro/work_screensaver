@@ -89,7 +89,7 @@ body {
 
 #window-controls {
   display: grid;
-  grid-template-columns: repeat(3, 46px);
+  grid-template-columns: repeat(4, 46px);
   position: absolute;
   top: 0;
   right: 0;
@@ -133,14 +133,18 @@ body {
   color: #000;
 }
 
-#min-button {
+
+#save-button{
   grid-column: 1;
 }
-#max-button, #restore-button {
+#add-button{
   grid-column: 2;
 }
-#close-button {
+#min-button {
   grid-column: 3;
+}
+#close-button {
+  grid-column: 4;
 }
 
 #restore-button {
