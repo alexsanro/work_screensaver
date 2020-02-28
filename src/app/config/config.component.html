@@ -19,7 +19,7 @@
 
 <div id="main">
     <form [formGroup]="configForm">
-        <div formArrayName="itemsConfig" *ngFor="let item of configForm.controls.itemsConfig?.value; let i = index;  trackBy: trackByFn">
+        <div formArrayName="itemsConfig" *ngFor="let item of itemsConfig.controls; let i = index;">
             <div [formGroupName]="i">
                 <label for="">Name:</label><br>
                 <input type="text" formControlName="label">
@@ -29,11 +29,9 @@
                 <br>
                 <input type="file" formControlName="file" />
                 <input type="text" formControlName="inputFileControl" />
+                <br>
+                <button (click)="removeFields(i)">Eliminar</button>
             </div>
         </div>
     </form>
-
-    <button (click)="addNewGroupFields()">Añadir</button>
-    <br>
-    <button (click)="saveConfiguration()">Guardar</button>
 </div>

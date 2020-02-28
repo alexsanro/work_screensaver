@@ -23,19 +23,15 @@ export class ConfigComponent implements OnInit {
   constructor(protected builder: FormBuilder, protected electronService: ElectronService) { }
 
   ngOnInit() {
-    let cred = this.configForm.controls.itemsConfig as FormArray;
-
     this.getConfigFile().forEach(element => {
-      //element.fileConfig = element.file;
-      //element.file = "";
-      console.log(element)
-      cred.push(this.builder.group({
+      this.itemsConfig.push(this.builder.group({
         label: element.label,
         shortcut: element.shortcut,
         file: '',
         inputFileControl: element.file
       }));
     });
+
   }
 
   onKeyDownShortcut(event: any) {
@@ -45,14 +41,13 @@ export class ConfigComponent implements OnInit {
     event.preventDefault();
   }
 
-  onkeyUpShortcut(event: any, i) {
-    
-    if (this.shortCutKeyDown != null) {  
-      event.target.value = "Alt+CommandOrControl+" + this.shortCutKeyDown;
+  onkeyUpShortcut(event: any, i: number) {
+    if (this.shortCutKeyDown != null) {
+      //var itemsConfig = (this.configForm.get('itemsConfig') as FormArray).at(i) as FormGroup;
+      //itemsConfig.get('shortcut').patchValue("Alt+CommandOrControl+" + this.shortCutKeyDown);
+      this.itemsConfig.at(i).get('shortcut').patchValue("Alt+CommandOrControl+" + this.shortCutKeyDown);
       this.shortCutKeyDown = null;
-      this.configForm.controls.itemsConfig.value[i].shortcut = "Alt+CommandOrControl+" + this.shortCutKeyDown;
     }
-    
   }
 
   getConfigFile() {
@@ -61,10 +56,7 @@ export class ConfigComponent implements OnInit {
   }
 
   addNewGroupFields() {
-    this.shortCutKeyDown = null;
-
-    var formArray = this.configForm.controls.itemsConfig as FormArray;
-    formArray.push(this.builder.group({
+    this.itemsConfig.push(this.builder.group({
       label: '',
       shortcut: '',
       file: '',
@@ -72,38 +64,29 @@ export class ConfigComponent implements OnInit {
     }));
   }
 
-  trackByFn(index, item) {
-    return index;  
-  }
-
   saveConfiguration() {
-    /*var file: any = document.getElementsByName("fileScreenSaver[]")[0];
-    
-    fs.copyFile(file.files[0].name, 'destination.txt', (err) => {
-      if (err) throw err;
-      console.log('source.txt was copied to destination.txt');
-    });*/
-
-    console.log(this.configForm.controls.itemsConfig.value)
-  
-    /*Object.keys(this.configForm.value).forEach(key => {
-      
-    });*/
-
     this.checkEmptyValuesConfigForm();  
-
-    var configFormValues = this.configForm.controls.itemsConfig.value;
-    configFormValues.forEach((element, key) => {
+    
+    var configFormValues = this.itemsConfig.getRawValue();
+    Object.entries(configFormValues).forEach(([key, element]) => {
       if(element.file == "" || element.file == undefined){
         configFormValues[key].file = element.inputFileControl;
         delete configFormValues[key].inputFileControl;
       }else{
-        this.copyFileToAssets(configFormValues[key].file);
+        this.copyFileToAssets(key);
         configFormValues[key].file = path.basename(element.file);
       }
     });
 
-    console.log(configFormValues);
+    console.log(configFormValues)
+  }
+
+  get itemsConfig(): FormArray{
+    return this.configForm.get('itemsConfig') as FormArray;
+  }
+
+  removeFields(position: any){
+    this.itemsConfig.removeAt(position)
   }
 
   minimizeWindow(){
@@ -115,9 +98,8 @@ export class ConfigComponent implements OnInit {
   }
 
   checkEmptyValuesConfigForm(){
-    
-    this.configForm.value.itemsConfig.forEach(element => {
-      console.log(element.shortcut)
+    var configFormValues = this.itemsConfig.value;
+    configFormValues.forEach(element => {
       if(element.label == "" || element.shortcut == "" || (element.file == "" && element.inputFileControl == "")){
         this.electronService.remote.dialog.showErrorBox('Error 202', 'There are many fields empties');
         throw new Error("There are empty values!!");
@@ -127,16 +109,13 @@ export class ConfigComponent implements OnInit {
     return true;
   }
 
-  copyFileToAssets(positionInput: number){
-    //console.log("ddd")
-    //console.log(document.getElementsByTagName('input'))
-    var file = document.querySelectorAll("input[type=file]")
-    console.log(file[positionInput][0].files);
+  copyFileToAssets(inputPosition: any){
+    var file: any = document.querySelectorAll("input[type=file]")
     
-    /*fs.copyFile(file[0].name, 'destination.txt', (err) => {
+    fs.copyFile(file[inputPosition].files[0].path, 'destination.txt', (err) => {
       if (err) throw err;
       console.log('source.txt was copied to destination.txt');
-    });*/
+    });
   }
 
 }
