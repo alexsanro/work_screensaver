@@ -28,21 +28,14 @@ export class ConfigComponent implements OnInit {
     this.getConfigFile().forEach(element => {
       //element.fileConfig = element.file;
       //element.file = "";
+      console.log(element)
       cred.push(this.builder.group({
-        label: '',
-        shortcut: '',
+        label: element.label,
+        shortcut: element.shortcut,
         file: '',
-        fileConfig: 'd'
+        inputFileControl: element.file
       }));
     });
-
-    var formArray = this.configForm.controls.itemsConfig as FormArray;
-    formArray.push(this.builder.group({
-      label: '',
-      shortcut: '',
-      file: '',
-      fileConfig: ''
-    }));
   }
 
   onKeyDownShortcut(event: any) {
@@ -52,11 +45,14 @@ export class ConfigComponent implements OnInit {
     event.preventDefault();
   }
 
-  onkeyUpShortcut(event: any) {
-    if (this.shortCutKeyDown != null) {
+  onkeyUpShortcut(event: any, i) {
+    
+    if (this.shortCutKeyDown != null) {  
       event.target.value = "Alt+CommandOrControl+" + this.shortCutKeyDown;
       this.shortCutKeyDown = null;
+      this.configForm.controls.itemsConfig.value[i].shortcut = "Alt+CommandOrControl+" + this.shortCutKeyDown;
     }
+    
   }
 
   getConfigFile() {
@@ -72,7 +68,7 @@ export class ConfigComponent implements OnInit {
       label: '',
       shortcut: '',
       file: '',
-      fileConfig: ''
+      inputFileControl: ''
     }));
   }
 
@@ -88,26 +84,26 @@ export class ConfigComponent implements OnInit {
       console.log('source.txt was copied to destination.txt');
     });*/
 
-    console.log(this.configForm.controls.itemsConfig)
-    var configFormValues = this.configForm.controls.itemsConfig.value;
-
+    console.log(this.configForm.controls.itemsConfig.value)
+  
     /*Object.keys(this.configForm.value).forEach(key => {
       
     });*/
 
     this.checkEmptyValuesConfigForm();  
 
+    var configFormValues = this.configForm.controls.itemsConfig.value;
     configFormValues.forEach((element, key) => {
-      if(element.file == ""){
-        element.file = element.fileConfig;
-        delete element.fileConfig;
+      if(element.file == "" || element.file == undefined){
+        configFormValues[key].file = element.inputFileControl;
+        delete configFormValues[key].inputFileControl;
       }else{
-        this.copyFileToAssets(element.file);
-        element.file = path.basename(element.file);
+        this.copyFileToAssets(configFormValues[key].file);
+        configFormValues[key].file = path.basename(element.file);
       }
     });
 
-    //console.log(ordererJsonConfig);
+    console.log(configFormValues);
   }
 
   minimizeWindow(){
@@ -121,7 +117,8 @@ export class ConfigComponent implements OnInit {
   checkEmptyValuesConfigForm(){
     
     this.configForm.value.itemsConfig.forEach(element => {
-      if(element.label == "" || element.shortcut == "" || (element.file == "" && element.fileConfig == "")){
+      console.log(element.shortcut)
+      if(element.label == "" || element.shortcut == "" || (element.file == "" && element.inputFileControl == "")){
         this.electronService.remote.dialog.showErrorBox('Error 202', 'There are many fields empties');
         throw new Error("There are empty values!!");
       }
@@ -133,8 +130,8 @@ export class ConfigComponent implements OnInit {
   copyFileToAssets(positionInput: number){
     //console.log("ddd")
     //console.log(document.getElementsByTagName('input'))
-    //document.getElementsByName("fileScreenSaver[]")[0];
-    ///console.log(file);
+    var file = document.querySelectorAll("input[type=file]")
+    console.log(file[positionInput][0].files);
     
     /*fs.copyFile(file[0].name, 'destination.txt', (err) => {
       if (err) throw err;

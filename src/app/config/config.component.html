@@ -24,11 +24,11 @@
                 <label for="">Name:</label><br>
                 <input type="text" formControlName="label">
                 <br>
-                <input formControlName="shortcut" class="shortcutInput" (keyup)="onkeyUpShortcut($event)"
+                <input formControlName="shortcut" class="shortcutInput" (keyup)="onkeyUpShortcut($event, i)"
                     (keydown)="onKeyDownShortcut($event)"/>
                 <br>
-                <input type="file" formControlName="file">
-                <input type="text" formControlName="fileConfig">
+                <input type="file" formControlName="file" />
+                <input type="text" formControlName="inputFileControl" />
             </div>
         </div>
     </form>
