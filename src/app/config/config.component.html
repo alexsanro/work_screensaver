@@ -9,7 +9,7 @@
             </div>
             <div class="button" id="min-button" (click)="minimizeWindow()">
                 <span>&#xE921;</span>
-            </div>  
+            </div>
             <div class="button" id="close-button" (click)="closeWindow()">
                 <span>&#xE8BB;</span>
             </div>
@@ -25,10 +25,18 @@
                 <input type="text" formControlName="label">
                 <br>
                 <input formControlName="shortcut" class="shortcutInput" (keyup)="onkeyUpShortcut($event, i)"
-                    (keydown)="onKeyDownShortcut($event)"/>
+                    (keydown)="onKeyDownShortcut($event)" />
                 <br>
-                <input type="file" formControlName="file" />
-                <input type="text" formControlName="inputFileControl" />
+                <div>
+                    <div *ngIf="item.value.file; else elseBlock">
+                        {{convertPathFileToBasename(item.value.file)}}
+                    </div>
+                    <ng-template #elseBlock>
+                        {{item.value.inputFileControl}}
+                    </ng-template>
+                    <input type="file" formControlName="file" class="inputfile"/>
+                    <input type="hidden" formControlName="inputFileControl" />
+                </div>
                 <br>
                 <button (click)="removeFields(i)">Eliminar</button>
             </div>

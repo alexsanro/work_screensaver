@@ -81,6 +81,10 @@ export class ConfigComponent implements OnInit {
     console.log(configFormValues)
   }
 
+  convertPathFileToBasename(file): string{
+    return path.basename(file);
+  }
+
   get itemsConfig(): FormArray{
     return this.configForm.get('itemsConfig') as FormArray;
   }
