@@ -1,8 +1,10 @@
 import { app, Menu, screen, Tray, globalShortcut, ipcMain, BrowserWindow } from 'electron';
-const fs = require('fs');
-import * as path from 'path';
-const ioHook = require('iohook');
 import * as url from 'url';
+import * as path from 'path';
+const fs = require('fs');
+const ioHook = require('iohook');
+
+let tray: Tray = null;
 
 function loadJsonConfig() {
   let rawdata = fs.readFileSync(path.join(__dirname, 'dist/assets/data/data_config.json'));
@@ -66,9 +68,19 @@ function newWindowConfig(): BrowserWindow {
     slashes: true,
     hash: '/config'
   }));
+
+  globalShortcut.unregisterAll();
   
   return configWindow
 }
+
+ipcMain.on('refreshMenuIcon', (event) => {
+  tray.setContextMenu(generateMenu());
+});
+
+ipcMain.on('enableShortcuts', (event) => {
+  generateShortcuts();
+})
 
 function generateBrowsersScreens(file: String) {
   var displays = screen.getAllDisplays();
@@ -85,7 +97,7 @@ function generateBrowsersScreens(file: String) {
       }
     })
 
-    windowSaver.loadFile(__dirname + '/dist/assets/' + file);
+    windowSaver.loadFile(__dirname + '/dist/assets/screensave_files/' + file);
     windowSaver.setAlwaysOnTop(true, 'screen-saver');
 
     windowSaver.webContents.on("did-finish-load", function () {
@@ -128,7 +140,6 @@ function closeWindows() {
 
 try {
 
-  let tray: Tray = null;
   app.on('ready', function () {
     tray = new Tray(__dirname + '/dist/favicon.ico');
     tray.setContextMenu(generateMenu());

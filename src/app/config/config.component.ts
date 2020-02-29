@@ -3,6 +3,7 @@ import { FormBuilder, FormArray, FormGroup, FormControl } from '@angular/forms';
 import * as path from 'path';
 import { ElectronService } from '../core/services';
 import { throwError } from 'rxjs';
+import { ipcRenderer } from 'electron';
 const fs = require('fs');
 
 @Component({
@@ -78,6 +79,14 @@ export class ConfigComponent implements OnInit {
       }
     });
 
+    try { 
+      fs.writeFileSync('dist/assets/data/data_config.json', JSON.stringify(configFormValues), 'utf-8'); 
+      ipcRenderer.send('refreshMenuIcon');
+    }
+    catch(e) {
+       alert('Failed to save the file !');
+    }
+
     console.log(configFormValues)
   }
 
@@ -98,6 +107,7 @@ export class ConfigComponent implements OnInit {
   }
 
   closeWindow(){
+    ipcRenderer.send('enableShortcuts');
     this.electronService.remote.BrowserWindow.getFocusedWindow().close();
   }
 
@@ -115,10 +125,9 @@ export class ConfigComponent implements OnInit {
 
   copyFileToAssets(inputPosition: any){
     var file: any = document.querySelectorAll("input[type=file]")
-    
-    fs.copyFile(file[inputPosition].files[0].path, 'destination.txt', (err) => {
+    var filePath = file[inputPosition].files[0].path;
+    fs.copyFile(filePath, __dirname+ '/assets/screensave_files/' + this.convertPathFileToBasename(filePath), (err) => {
       if (err) throw err;
-      console.log('source.txt was copied to destination.txt');
     });
   }
 

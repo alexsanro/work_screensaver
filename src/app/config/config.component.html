@@ -28,7 +28,6 @@
                     (keydown)="onKeyDownShortcut($event)" />
                 <br>
                 <div>
-                    
                     <div class="custom-file">
                         <input type="file" class="custom-file-input" formControlName="file">
                         <label class="custom-file-label" *ngIf="item.value.file; else elseBlock">
@@ -37,7 +36,7 @@
                         <ng-template #elseBlock>
                             <label class="custom-file-label">{{item.value.inputFileControl}}</label>
                         </ng-template>
-                      </div>
+                    </div>
                     <input type="hidden" formControlName="inputFileControl" />
                 </div>
                 <br>
