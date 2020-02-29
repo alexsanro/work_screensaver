@@ -28,13 +28,16 @@
                     (keydown)="onKeyDownShortcut($event)" />
                 <br>
                 <div>
-                    <div *ngIf="item.value.file; else elseBlock">
-                        {{convertPathFileToBasename(item.value.file)}}
-                    </div>
-                    <ng-template #elseBlock>
-                        {{item.value.inputFileControl}}
-                    </ng-template>
-                    <input type="file" formControlName="file" class="inputfile"/>
+                    
+                    <div class="custom-file">
+                        <input type="file" class="custom-file-input" formControlName="file">
+                        <label class="custom-file-label" *ngIf="item.value.file; else elseBlock">
+                            {{convertPathFileToBasename(item.value.file)}}
+                        </label>
+                        <ng-template #elseBlock>
+                            <label class="custom-file-label">{{item.value.inputFileControl}}</label>
+                        </ng-template>
+                      </div>
                     <input type="hidden" formControlName="inputFileControl" />
                 </div>
                 <br>
