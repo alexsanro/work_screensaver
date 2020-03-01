@@ -6,7 +6,7 @@ html, body {height: 100%; margin: 0;}
 
 body {
   font-family: "Segoe UI", sans-serif;
-  background: #1A2933;
+  background: #ffdab3;
   color: #FFF;
 }
 
@@ -23,15 +23,16 @@ p {
 
 /* Styling of window frame and titlebar */
 body {
-  border: 1px solid #48545c;
+  //border: 1px solid #48545c;
   overflow-y: hidden;
 }
 
 
 #titlebar {
+  top: 0px;
   display: block;
   position: fixed;
-  height: 32px;
+  height: 34px;
   width: calc(100% - 2px);
 }
 
@@ -58,7 +59,7 @@ body {
 }
 
 #titlebar {
-  color: #FFF;
+  color: #4d4d4d;
 }
 
 #titlebar #drag-region {
@@ -117,11 +118,11 @@ body {
 }
 
 #window-controls .button:hover {
-  background: rgba(255,255,255,0.1);
+  background: rgba(255, 255, 255, 0.61);
 }
 
 #window-controls .button:active {
-  background: rgba(255,255,255,0.2);
+  background: rgba(255, 255, 255, 0.80);
 }
 
 #close-button:hover {
@@ -147,14 +148,26 @@ body {
   grid-column: 4;
 }
 
-#restore-button {
-  display: none !important;
+.toast{
+  opacity: 1;
+  max-width: 100%;
+  background-color: rgba(255,233,210,1.85);
+  color: black;
+  margin-bottom: 10px;
 }
 
-.maximized #restore-button {
-  display: flex !important;
+::-webkit-scrollbar {
+  width: 5px;
 }
 
-.maximized #max-button {
-  display: none;
+/* Track */
+::-webkit-scrollbar-track {
+  background: #eee; 
+}
+ 
+/* Handle */
+::-webkit-scrollbar-thumb {
+  border-radius: 1rem;
+  background-color: #00d2ff;
+  background-image: linear-gradient(to top, #ffdab3 0%, #ff9c33 100%);
 }

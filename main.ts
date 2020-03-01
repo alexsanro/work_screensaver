@@ -49,6 +49,10 @@ function newWindowConfig(): BrowserWindow {
   var configWindow = new BrowserWindow({
     height: 700,
     width: 500,
+    minHeight: 700,
+    minWidth: 500,
+    maxHeight: 900,
+    maxWidth: 700,
     show: true,
     title: 'Config',
     focusable: true,
@@ -59,8 +63,6 @@ function newWindowConfig(): BrowserWindow {
       nodeIntegration: true
     }
   })
-
-  configWindow.webContents.openDevTools();
 
   configWindow.loadURL(url.format({
     pathname: path.join(__dirname,'dist/index.html'),
