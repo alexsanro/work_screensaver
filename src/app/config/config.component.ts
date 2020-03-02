@@ -70,13 +70,21 @@ export class ConfigComponent implements OnInit {
     
     var configFormValues = this.itemsConfig.getRawValue();
     Object.entries(configFormValues).forEach(([key, element]) => {
-      if(element.file == "" || element.file == undefined){
+      //console.log(fs.lstatSync(configFormValues[key].inputFileControl).isFile());
+      /*if(element.file == "" || element.file == undefined){
         configFormValues[key].file = element.inputFileControl;
-        delete configFormValues[key].inputFileControl;
+        //delete configFormValues[key].inputFileControl;
       }else{
-        this.copyFileToAssets(key);
+        this.copyFileToAssets(element.file);
         configFormValues[key].file = path.basename(element.file);
+      }*/
+      if(fs.existsSync(configFormValues[key].inputFileControl) && fs.lstatSync(configFormValues[key].inputFileControl).isFile()){
+        this.copyFileToAssets(element.inputFileControl);
+        configFormValues[key].file = path.basename(element.file);
+      }else{
+        configFormValues[key].file = element.file;
       }
+      delete configFormValues[key].inputFileControl;
     });
 
     try { 
@@ -123,12 +131,14 @@ export class ConfigComponent implements OnInit {
     return true;
   }
 
-  copyFileToAssets(inputPosition: any){
-    var file: any = document.querySelectorAll("input[type=file]")
-    var filePath = file[inputPosition].files[0].path;
+  copyFileToAssets(filePath: string){
     fs.copyFile(filePath, __dirname+ '/assets/screensave_files/' + this.convertPathFileToBasename(filePath), (err) => {
       if (err) throw err;
     });
+  }
+
+  fileOnChange(event: any, i: number){
+    this.itemsConfig.at(i).get('inputFileControl').patchValue(event.target.files[0].path);
   }
 
 }
