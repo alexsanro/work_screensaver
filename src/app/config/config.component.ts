@@ -24,14 +24,16 @@ export class ConfigComponent implements OnInit {
   constructor(protected builder: FormBuilder, protected electronService: ElectronService) { }
 
   ngOnInit() {
+
     this.getConfigFile().forEach(element => {
       this.itemsConfig.push(this.builder.group({
-        label: element.label,
-        shortcut: element.shortcut,
+        label: element.label || "",
+        shortcut: element.shortcut || "",
         file: '',
-        inputFileControl: element.file
+        inputFileControl: element.file || ""
       }));
     });
+
   }
 
   onKeyDownShortcut(event: any) {
@@ -43,8 +45,6 @@ export class ConfigComponent implements OnInit {
 
   onkeyUpShortcut(event: any, i: number) {
     if (this.shortCutKeyDown != null) {
-      //var itemsConfig = (this.configForm.get('itemsConfig') as FormArray).at(i) as FormGroup;
-      //itemsConfig.get('shortcut').patchValue("Alt+CommandOrControl+" + this.shortCutKeyDown);
       this.itemsConfig.at(i).get('shortcut').patchValue("Alt+CommandOrControl+" + this.shortCutKeyDown);
       this.shortCutKeyDown = null;
     }
@@ -69,14 +69,6 @@ export class ConfigComponent implements OnInit {
     
     var configFormValues = this.itemsConfig.getRawValue();
     Object.entries(configFormValues).forEach(([key, element]) => {
-      //console.log(fs.lstatSync(configFormValues[key].inputFileControl).isFile());
-      /*if(element.file == "" || element.file == undefined){
-        configFormValues[key].file = element.inputFileControl;
-        //delete configFormValues[key].inputFileControl;
-      }else{
-        this.copyFileToAssets(element.file);
-        configFormValues[key].file = path.basename(element.file);
-      }*/
       if(fs.existsSync(configFormValues[key].inputFileControl) && fs.lstatSync(configFormValues[key].inputFileControl).isFile()){
         this.copyFileToAssets(element.inputFileControl);
         configFormValues[key].file = path.basename(element.file);
@@ -108,11 +100,8 @@ export class ConfigComponent implements OnInit {
   }
 
   closeWindow(){
-    //ipcRenderer.send('enableShortcuts');
+    ipcRenderer.send('enableShortcuts');
     this.electronService.remote.getCurrentWindow().close();
-    console.log(this.electronService.remote.getCurrentWindow())
-    //console.log(this.electronService.remote.BrowserWindow.getFocusedWindow())
-    //this.electronService.remote.BrowserWindow.getFocusedWindow().close();
   }
 
   checkEmptyValuesConfigForm(){
