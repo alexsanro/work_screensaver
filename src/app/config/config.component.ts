@@ -32,7 +32,6 @@ export class ConfigComponent implements OnInit {
         inputFileControl: element.file
       }));
     });
-
   }
 
   onKeyDownShortcut(event: any) {
@@ -94,8 +93,6 @@ export class ConfigComponent implements OnInit {
     catch(e) {
        alert('Failed to save the file !');
     }
-
-    console.log(configFormValues)
   }
 
   convertPathFileToBasename(file): string{
@@ -106,17 +103,16 @@ export class ConfigComponent implements OnInit {
     return this.configForm.get('itemsConfig') as FormArray;
   }
 
-  removeFields(position: any){
-    this.itemsConfig.removeAt(position)
-  }
-
   minimizeWindow(){
     this.electronService.remote.BrowserWindow.getFocusedWindow().minimize();
   }
 
   closeWindow(){
-    ipcRenderer.send('enableShortcuts');
-    this.electronService.remote.BrowserWindow.getFocusedWindow().close();
+    //ipcRenderer.send('enableShortcuts');
+    this.electronService.remote.getCurrentWindow().close();
+    console.log(this.electronService.remote.getCurrentWindow())
+    //console.log(this.electronService.remote.BrowserWindow.getFocusedWindow())
+    //this.electronService.remote.BrowserWindow.getFocusedWindow().close();
   }
 
   checkEmptyValuesConfigForm(){
@@ -139,6 +135,21 @@ export class ConfigComponent implements OnInit {
 
   fileOnChange(event: any, i: number){
     this.itemsConfig.at(i).get('inputFileControl').patchValue(event.target.files[0].path);
+  }
+
+  preubaSave(){
+    fs.writeFileSync('dist/assets/data/data_config.json', 'prueba', 'utf-8'); 
+  }
+
+
+  pruebacopy(){
+    fs.copyFile('/prueba-file/prueba.txt', '/prueba/prueba.txt', (err) => {
+      if (err) throw err;
+    });
+  }
+
+  pruebaElement(){
+    console.log(document.querySelector("input[formControlName='label']"))
   }
 
 }

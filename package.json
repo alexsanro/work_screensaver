@@ -94,7 +94,8 @@
     "bootstrap": "4.4.1",
     "iohook": "0.6.5",
     "karma-phantomjs-launcher": "1.0.4",
-    "karma-spec-reporter": "0.0.32"
+    "karma-spec-reporter": "0.0.32",
+    "mock-fs": "4.11.0"
   },
   "iohook": {
     "targets": [
