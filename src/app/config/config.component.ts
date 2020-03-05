@@ -65,80 +65,82 @@ export class ConfigComponent implements OnInit {
   }
 
   saveConfiguration() {
-    this.checkEmptyValuesConfigForm();  
-    
-    var configFormValues = this.itemsConfig.getRawValue();
-    Object.entries(configFormValues).forEach(([key, element]) => {
-      if(fs.existsSync(configFormValues[key].inputFileControl) && fs.lstatSync(configFormValues[key].inputFileControl).isFile()){
-        this.copyFileToAssets(element.inputFileControl);
-        configFormValues[key].file = path.basename(element.file);
-      }else{
-        configFormValues[key].file = element.file;
-      }
-      delete configFormValues[key].inputFileControl;
-    });
 
-    try { 
-      fs.writeFileSync('dist/assets/data/data_config.json', JSON.stringify(configFormValues), 'utf-8'); 
-      ipcRenderer.send('refreshMenuIcon');
+    if (this.checkEmptyValuesConfigForm()) {
+
+      var configFormValues = this.itemsConfig.getRawValue();
+      Object.entries(configFormValues).forEach(([key, element]) => {
+        if (fs.existsSync(configFormValues[key].inputFileControl) && fs.lstatSync(configFormValues[key].inputFileControl).isFile()) {
+          this.copyFileToAssets(element.inputFileControl);
+          configFormValues[key].file = path.basename(element.file);
+        } else {
+          configFormValues[key].file = element.file;
+        }
+        delete configFormValues[key].inputFileControl;
+      });
+
+      try {
+        fs.writeFileSync('dist/assets/data/data_config.json', JSON.stringify(configFormValues), 'utf-8');
+        ipcRenderer.send('refreshMenuIcon');
+      }
+      catch (e) {
+        this.electronService.remote.dialog.showErrorBox('Error', e.message)
+      }
+
     }
-    catch(e) {
-       alert('Failed to save the file !');
-    }
+
   }
 
-  convertPathFileToBasename(file): string{
+  convertPathFileToBasename(file): string {
     return path.basename(file);
   }
 
-  get itemsConfig(): FormArray{
+  get itemsConfig(): FormArray {
     return this.configForm.get('itemsConfig') as FormArray;
   }
 
-  minimizeWindow(){
-    this.electronService.remote.BrowserWindow.getFocusedWindow().minimize();
+  removeFields(position: any) {
+    this.itemsConfig.removeAt(position)
   }
 
-  closeWindow(){
+  minimizeWindow() {
+    this.electronService.remote.getCurrentWindow().minimize();
+  }
+
+  closeWindow() {
     ipcRenderer.send('enableShortcuts');
     this.electronService.remote.getCurrentWindow().close();
   }
 
-  checkEmptyValuesConfigForm(){
+  checkEmptyValuesConfigForm() {
     var configFormValues = this.itemsConfig.value;
-    configFormValues.forEach(element => {
-      if(element.label == "" || element.shortcut == "" || (element.file == "" && element.inputFileControl == "")){
-        this.electronService.remote.dialog.showErrorBox('Error 202', 'There are many fields empties');
-        throw new Error("There are empty values!!");
-      }
-    });
+
+    try {
+      configFormValues.forEach(element => {
+        if (element.label == "" || element.shortcut == "" || (element.file == "" && element.inputFileControl == "")) {
+          throw new Error();
+        }
+      });
+    } catch (error) {
+      this.electronService.remote.dialog.showErrorBox('Error 202', "There are empty values!!");
+      return false;
+    }
 
     return true;
   }
 
-  copyFileToAssets(filePath: string){
-    fs.copyFile(filePath, __dirname+ '/assets/screensave_files/' + this.convertPathFileToBasename(filePath), (err) => {
-      if (err) throw err;
-    });
+  copyFileToAssets(filePath: string) {
+    try{
+      fs.copyFile(filePath, __dirname + '/assets/screensave_files/' + this.convertPathFileToBasename(filePath), (err) => {
+        if (err) throw err;
+      });
+    }catch(e){
+      this.electronService.remote.dialog.showErrorBox('Error', e.message)
+    }
   }
 
-  fileOnChange(event: any, i: number){
+  fileOnChange(event: any, i: number) {
     this.itemsConfig.at(i).get('inputFileControl').patchValue(event.target.files[0].path);
-  }
-
-  preubaSave(){
-    fs.writeFileSync('dist/assets/data/data_config.json', 'prueba', 'utf-8'); 
-  }
-
-
-  pruebacopy(){
-    fs.copyFile('/prueba-file/prueba.txt', '/prueba/prueba.txt', (err) => {
-      if (err) throw err;
-    });
-  }
-
-  pruebaElement(){
-    console.log(document.querySelector("input[formControlName='label']"))
   }
 
 }
