@@ -26,9 +26,10 @@ describe('ConfigComponent', () => {
   beforeEach(() => {
     mock({
       '/assets/data/data_config.json': '[{"label": "mock","file": "mock.gif","shortcut": "Alt+CommandOrControl+B"}]',
-      'dist/assets/data': mock.directory({
+      '/assets/screensave_files': mock.directory({
         mode: 755
-      })
+      }),
+      '/mock/mockito.gif': "Mockito Gif"
     });
 
     fixture = TestBed.createComponent(ConfigComponent);
@@ -41,35 +42,6 @@ describe('ConfigComponent', () => {
   it('should create', () => {
     expect(component).toBeTruthy();
   });
-  /*
-    
-  
-    it('prueba guardado', () => {
-      mock({
-        'dist/assets/data/data_config.txt': 'hola'
-      });
-      //component.preubaSave();
-      var rawdata = fs.readFileSync('dist/assets/data/data_config.txt');
-      console.log(rawdata)
-      expect(component).toBeTruthy();
-    });*/
-
-  /*it('prueba copiad', () => {
-    mock({
-      '/prueba-file/prueba.txt': 'hola',
-      '/prueba': mock.directory({
-        mode: 755
-      })
-    });
-    component.pruebacopy();
-    var rawdata = fs.readFileSync('/prueba/prueba.txt');
-    console.log(rawdata)
-    expect(component).toBeTruthy();
-  });*/
-
-  /*it('prueba console', () => {
-    console.log(document.querySelectorAll("input[formControlName='label']"))
-  });*/
 
   it('Config file with JSON init correct', () => {
     var configFileJsonMock: JSON = JSON.parse('[{"label": "Coffee","file": "coffee_cup.gif","shortcut": "Alt+CommandOrControl+C"}]');
@@ -123,6 +95,40 @@ describe('ConfigComponent', () => {
     expect(titleDialog).toEqual("Error 202");
     expect(contentDialgo).toEqual("There are empty values!!");
   })
+  
+
+  it('Save configuration and copy files correctly', () => {
+    var configFileJsonMock: JSON = JSON.parse('[{"label": "mock","file": "mockito.gif","shortcut": "Alt+CommandOrControl+B"}]');
+    var mockitoEvent = {
+      'target': {
+        'files':
+          [{
+            'path': '/mock/mockito.gif'
+          }]
+      }
+    }
+
+    component.fileOnChange(mockitoEvent, 0);
+    component.saveConfiguration();
+
+    expect(configFileJsonMock).toEqual(component.getConfigFile());
+
+  })
+
+  
+  it('Copy failed', () => {
+
+    var throwDialog = false;
+    spyOn(fs, 'copyFile').and.throwError('New Error nn Copys');
+    spyOn(electronService.remote.dialog, 'showErrorBox').and.callFake((title, content) => {
+      throwDialog = true;
+    })
+
+    component.copyFileToAssets('/mockito/mockito.gif');
+
+    expect(throwDialog).toBeTruthy();
+
+  })
 
   it('Save correctly click button', () => {
 
@@ -136,12 +142,19 @@ describe('ConfigComponent', () => {
   })
 
   it('Minimize window click button', () => {
-    document.getElementById("min-button").click();
-    var isMinimized = electronService.remote.getCurrentWindow().isMinimized();
-    expect(isMinimized).toBeTruthy();
+
+    var fakeMinimize = false;
+    spyOn(electronService.remote.getCurrentWindow(), 'minimize').and.callFake(() => {
+      fakeMinimize = true;
+    })
+    
+    document.getElementById("min-button").click()
+
+    expect(fakeMinimize).toBeTruthy();
+
   })
 
-  it('Keydown shortcut input', () => {
+  it('Keydown shortcut input value seted', () => {
     var input = document.querySelectorAll("input[formControlName='shortcut']")[0]
     var event = new KeyboardEvent("keydown", {
       "key": "b",
@@ -152,6 +165,17 @@ describe('ConfigComponent', () => {
     expect('b').toEqual(component.shortCutKeyDown)
   })
 
+  it('Keydown shortcut input value seted', () => {
+    var input = document.querySelectorAll("input[formControlName='shortcut']")[0]
+    var event = new KeyboardEvent("keydown", {
+      "key": "b",
+      'ctrlKey': false,
+      'altKey': false
+    });
+    input.dispatchEvent(event);
+    expect(null).toEqual(component.shortCutKeyDown)
+  })
+
   it('Keyup shortcut input', () => {
     var input = document.querySelectorAll("input[formControlName='shortcut']")[0]
     var event = new KeyboardEvent("keyup");
@@ -160,6 +184,15 @@ describe('ConfigComponent', () => {
     input.dispatchEvent(event);
 
     expect('Alt+CommandOrControl+z').toEqual(component.itemsConfig.value[0].shortcut)
+  })
+
+  it('Keyup shortcut input', () => {
+    var input = document.querySelectorAll("input[formControlName='shortcut']")[0]
+    var event = new KeyboardEvent("keyup");
+
+    input.dispatchEvent(event);
+
+    expect('Alt+CommandOrControl+B').toEqual(component.itemsConfig.value[0].shortcut)
   })
 
   it('Function change input file', () => {
@@ -182,9 +215,9 @@ describe('ConfigComponent', () => {
   })
 
   it('Remove field group with click', () => {
-    var prueba = fixture.debugElement.nativeElement.querySelector('button');
-    prueba.click();
-    //closeButton.item.click
+    var buttonDelete = fixture.debugElement.nativeElement.querySelector('button');
+    buttonDelete.click();
+    expect(component.itemsConfig.value.length).toEqual(0)
   })
 
 });

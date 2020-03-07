@@ -69,24 +69,19 @@ export class ConfigComponent implements OnInit {
     if (this.checkEmptyValuesConfigForm()) {
 
       var configFormValues = this.itemsConfig.getRawValue();
+      
       Object.entries(configFormValues).forEach(([key, element]) => {
         if (fs.existsSync(configFormValues[key].inputFileControl) && fs.lstatSync(configFormValues[key].inputFileControl).isFile()) {
+          configFormValues[key].file = path.basename(element.inputFileControl);
           this.copyFileToAssets(element.inputFileControl);
-          configFormValues[key].file = path.basename(element.file);
         } else {
           configFormValues[key].file = element.file;
         }
         delete configFormValues[key].inputFileControl;
       });
 
-      try {
-        fs.writeFileSync('dist/assets/data/data_config.json', JSON.stringify(configFormValues), 'utf-8');
-        ipcRenderer.send('refreshMenuIcon');
-      }
-      catch (e) {
-        this.electronService.remote.dialog.showErrorBox('Error', e.message)
-      }
-
+      fs.writeFileSync(path.join(__dirname, '/assets/data/data_config.json'), JSON.stringify(configFormValues), 'utf-8');
+      ipcRenderer.send('refreshMenuIcon');
     }
 
   }
@@ -131,9 +126,7 @@ export class ConfigComponent implements OnInit {
 
   copyFileToAssets(filePath: string) {
     try{
-      fs.copyFile(filePath, __dirname + '/assets/screensave_files/' + this.convertPathFileToBasename(filePath), (err) => {
-        if (err) throw err;
-      });
+      fs.copyFileSync(filePath, path.join(__dirname,'/assets/screensave_files/' + this.convertPathFileToBasename(filePath)));
     }catch(e){
       this.electronService.remote.dialog.showErrorBox('Error', e.message)
     }
