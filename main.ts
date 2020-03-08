@@ -7,7 +7,7 @@ const ioHook = require('iohook');
 let tray: Tray = null;
 
 function loadJsonSettings() {
-  let rawdata = fs.readFileSync(path.join(__dirname, 'dist/assets/data/data_settings.json'));
+  let rawdata = fs.readFileSync(path.join(process.cwd(), 'resources/data/data_settings.json'));
   return JSON.parse(rawdata);
 }
 
@@ -99,7 +99,7 @@ function generateBrowsersScreens(file: String) {
       }
     })
 
-    windowSaver.loadFile(__dirname + '/dist/assets/screensave_files/' + file);
+    windowSaver.loadFile(process.cwd() + 'resources/screensave_files/' + file);
     windowSaver.setAlwaysOnTop(true, 'screen-saver');
 
     windowSaver.webContents.on("did-finish-load", function () {

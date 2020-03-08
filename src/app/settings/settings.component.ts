@@ -51,7 +51,7 @@ export class SettingsComponent implements OnInit {
   }
 
   getSettingsFile() {
-    var rawdata = fs.readFileSync(path.join(__dirname, '/assets/data/data_settings.json'));
+    var rawdata = fs.readFileSync(path.join(process.cwd(), 'resources/data/data_settings.json'));
     return JSON.parse(rawdata);
   }
 
@@ -80,7 +80,7 @@ export class SettingsComponent implements OnInit {
         delete settingsFormValues[key].inputFileControl;
       });
 
-      fs.writeFileSync(path.join(__dirname, '/assets/data/data_settings.json'), JSON.stringify(settingsFormValues), 'utf-8');
+      fs.writeFileSync(path.join(process.cwd(), 'resources/data/data_settings.json'), JSON.stringify(settingsFormValues), 'utf-8');
       ipcRenderer.send('refreshMenuIcon');
     }
 
@@ -126,7 +126,7 @@ export class SettingsComponent implements OnInit {
 
   copyFileToAssets(filePath: string) {
     try{
-      fs.copyFileSync(filePath, path.join(__dirname,'/assets/screensave_files/' + this.convertPathFileToBasename(filePath)));
+      fs.copyFileSync(filePath, path.join(process.cwd(),'resources/screensave_files/' + this.convertPathFileToBasename(filePath)));
     }catch(e){
       this.electronService.remote.dialog.showErrorBox('Error', e.message)
     }
