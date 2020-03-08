@@ -6,16 +6,16 @@ const ioHook = require('iohook');
 
 let tray: Tray = null;
 
-function loadJsonConfig() {
-  let rawdata = fs.readFileSync(path.join(__dirname, 'dist/assets/data/data_config.json'));
+function loadJsonSettings() {
+  let rawdata = fs.readFileSync(path.join(__dirname, 'dist/assets/data/data_settings.json'));
   return JSON.parse(rawdata);
 }
 
 function generateMenu(): Menu {
 
   var arrayMenu = [];
-  var jsonConfig: JSON = loadJsonConfig();
-  Object.entries(jsonConfig).forEach(([key, value]) => {
+  var jsonSettings: JSON = loadJsonSettings();
+  Object.entries(jsonSettings).forEach(([key, value]) => {
     var json = {
       label: value.label,
       click: function () {
@@ -28,9 +28,9 @@ function generateMenu(): Menu {
 
   arrayMenu.push(
     {
-      label: 'Config',
+      label: 'Settings',
       click: function(){
-        newWindowConfig();
+        newWindowSettings();
       }
     },
     {
@@ -45,8 +45,8 @@ function generateMenu(): Menu {
   return contextMenu;
 }
 
-function newWindowConfig(): BrowserWindow {
-  var configWindow = new BrowserWindow({
+function newWindowSettings(): BrowserWindow {
+  var settingsWindow = new BrowserWindow({
     height: 700,
     width: 500,
     minHeight: 700,
@@ -54,7 +54,7 @@ function newWindowConfig(): BrowserWindow {
     maxHeight: 900,
     maxWidth: 700,
     show: true,
-    title: 'Config',
+    title: 'Settings',
     focusable: true,
     frame: false,
     backgroundColor: '#FFF',
@@ -64,16 +64,16 @@ function newWindowConfig(): BrowserWindow {
     }
   })
 
-  configWindow.loadURL(url.format({
+  settingsWindow.loadURL(url.format({
     pathname: path.join(__dirname,'dist/index.html'),
     protocol: 'file:',
     slashes: true,
-    hash: '/config'
+    hash: '/settings'
   }));
 
   globalShortcut.unregisterAll();
   
-  return configWindow
+  return settingsWindow
 }
 
 ipcMain.on('refreshMenuIcon', (event) => {
@@ -123,8 +123,8 @@ function ioHookScripts() {
 }
 
 function generateShortcuts() {
-  var json_config: JSON = loadJsonConfig();
-  Object.entries(json_config).forEach(([key, value]) => {
+  var json_setting: JSON = loadJsonSettings();
+  Object.entries(json_setting).forEach(([key, value]) => {
     globalShortcut.register(value.shortcut, () => {
       generateBrowsersScreens(value.file);
     })

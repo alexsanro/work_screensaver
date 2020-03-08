@@ -1,5 +1,14 @@
 {
   "productName": "angular-electron",
+  "extraResources": [
+      {
+        "from": "./resources/",
+        "to": ".",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
   "directories": {
     "output": "release/"
   },
