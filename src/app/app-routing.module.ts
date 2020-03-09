@@ -1,11 +1,11 @@
 import { NgModule } from '@angular/core';
 import { Routes, RouterModule } from '@angular/router';
-import { PageNotFoundComponent } from './shared/components';
 
 const routes: Routes = [
   {
-    path: '**',
-    component: PageNotFoundComponent
+    path: 'config',
+    redirectTo: 'config',
+    pathMatch: 'full'
   }
 ];
 

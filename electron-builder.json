@@ -1,5 +1,14 @@
 {
   "productName": "angular-electron",
+  "extraResources": [
+      {
+        "from": "./src/resources/",
+        "to": ".",
+        "filter": [
+          "**/*"
+        ]
+      }
+    ],
   "directories": {
     "output": "release/"
   },
@@ -20,7 +29,7 @@
         "!tslint.json"
     ],
   "win": {
-    "icon": "dist",
+    "icon": "dist/favicon.ico",
     "target": [
       "portable"
     ]
