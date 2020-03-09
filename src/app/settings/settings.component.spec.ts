@@ -3,7 +3,7 @@ import * as url from 'url';
 import { ReactiveFormsModule, FormArray } from '@angular/forms';
 import { ElectronService } from '../core/services';
 const fs = require('fs');
-var jsonSettingsFile = require('../../assets/data/data_config.json')
+var jsonSettingsFile = require('../../resources/data/data_settings.json')
 const mock = require('mock-fs');
 import * as path from 'path';
 import { ipcRenderer } from 'electron';
@@ -25,19 +25,20 @@ describe('SettingsComponent', () => {
 
   beforeEach(() => {
     mock({
-      '/assets/data/data_config.json': '[{"label": "mock","file": "mock.gif","shortcut": "Alt+CommandOrControl+B"}]',
-      '/assets/screensave_files': mock.directory({
+      'resources/data/data_settings.json': '[{"label": "mock","file": "mock.gif","shortcut": "Alt+CommandOrControl+B"}]',
+      'resources/screensave_files': mock.directory({
         mode: 755
       }),
-      '/mock/mockito.gif': "Mockito Gif"
-    });
+      '/mock/mockito.gif': "Mockito Gif",
+    }, {createCwd: false});
 
-    fixture = TestBed.createComponent(ConfigComponent);
+    fixture = TestBed.createComponent(SettingsComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });
 
   afterEach(mock.restore);
+
 
   it('should create', () => {
     expect(component).toBeTruthy();
@@ -45,13 +46,13 @@ describe('SettingsComponent', () => {
 
   it('Config file with JSON init correct', () => {
     var configFileJsonMock: JSON = JSON.parse('[{"label": "Coffee","file": "coffee_cup.gif","shortcut": "Alt+CommandOrControl+C"}]');
-    expect(jsonConfigFile).toEqual(configFileJsonMock);
+    expect(jsonSettingsFile).toEqual(configFileJsonMock);
   })
 
   it('Config file is empty on INIT', () => {
     fixture.detectChanges();
 
-    var formArraItems = component.itemsConfig.value;
+    var formArraItems = component.itemsSettings.value;
     expect(formArraItems[0].label).toEqual('mock');
     expect(formArraItems[0].shortcut).toEqual('Alt+CommandOrControl+B');
     expect(formArraItems[0].file).toEqual('');
@@ -60,7 +61,7 @@ describe('SettingsComponent', () => {
 
   it('Add new group of element form array', () => {
     document.getElementById("add-button").click();
-    var numItems = component.itemsConfig.value.length;
+    var numItems = component.itemsSettings.value.length;
     expect(numItems).toEqual(2);
   })
 
@@ -109,13 +110,13 @@ describe('SettingsComponent', () => {
     }
 
     component.fileOnChange(mockitoEvent, 0);
-    component.saveConfiguration();
+    component.saveSettings();
 
-    expect(configFileJsonMock).toEqual(component.getConfigFile());
+    expect(configFileJsonMock).toEqual(component.getSettingsFile());
 
   })
 
-  
+ 
   it('Copy failed', () => {
 
     var throwDialog = false;
@@ -140,7 +141,7 @@ describe('SettingsComponent', () => {
     document.getElementById("save-button").click();
     expect(ipcRenderSendMock).toEqual("refreshMenuIcon");
   })
-
+ 
   it('Minimize window click button', () => {
 
     var fakeMinimize = false;
@@ -183,7 +184,7 @@ describe('SettingsComponent', () => {
     component.shortCutKeyDown = "z";
     input.dispatchEvent(event);
 
-    expect('Alt+CommandOrControl+z').toEqual(component.itemsConfig.value[0].shortcut)
+    expect('Alt+CommandOrControl+z').toEqual(component.itemsSettings.value[0].shortcut)
   })
 
   it('Keyup shortcut input', () => {
@@ -192,7 +193,7 @@ describe('SettingsComponent', () => {
 
     input.dispatchEvent(event);
 
-    expect('Alt+CommandOrControl+B').toEqual(component.itemsConfig.value[0].shortcut)
+    expect('Alt+CommandOrControl+B').toEqual(component.itemsSettings.value[0].shortcut)
   })
 
   it('Function change input file', () => {
@@ -206,7 +207,7 @@ describe('SettingsComponent', () => {
     }
 
     component.fileOnChange(mockitoEvent, 0);
-    expect('mockito/mockito.gif').toEqual(component.itemsConfig.value[0].inputFileControl)
+    expect('mockito/mockito.gif').toEqual(component.itemsSettings.value[0].inputFileControl)
   })
 
   it('Basename path', () => {
@@ -217,7 +218,7 @@ describe('SettingsComponent', () => {
   it('Remove field group with click', () => {
     var buttonDelete = fixture.debugElement.nativeElement.querySelector('button');
     buttonDelete.click();
-    expect(component.itemsConfig.value.length).toEqual(0)
+    expect(component.itemsSettings.value.length).toEqual(0)
   })
 
 });
@@ -238,8 +239,8 @@ describe('SettingsComponent Empty mock file', () => {
 
   beforeEach(() => {
     mock({
-      '/assets/data/data_config.json': '[{}]'
-    });
+      'resources/data/data_config.json': '[{}]'
+    }, {createCwd: false});
 
     fixture = TestBed.createComponent(SettingsComponent);
     component = fixture.componentInstance;
@@ -249,7 +250,7 @@ describe('SettingsComponent Empty mock file', () => {
   afterEach(mock.restore);
 
   it('Config file is empty on INIT', () => {
-    var formArraItems = component.itemsConfig.value;
+    var formArraItems = component.itemsSettings.value;
     expect(formArraItems[0].label).toEqual('');
     expect(formArraItems[0].shortcut).toEqual('');
     expect(formArraItems[0].file).toEqual('');

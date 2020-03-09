@@ -2,7 +2,7 @@
   "productName": "angular-electron",
   "extraResources": [
       {
-        "from": "./resources/",
+        "from": "./src/resources/",
         "to": ".",
         "filter": [
           "**/*"

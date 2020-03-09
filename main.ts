@@ -89,6 +89,8 @@ function generateBrowsersScreens(file: String) {
 
   displays.forEach(element => {
     var windowSaver = new BrowserWindow({
+      x: element.bounds.x,
+      y: element.bounds.y,
       show: true,
       focusable: true,
       fullscreen: true,
@@ -99,7 +101,7 @@ function generateBrowsersScreens(file: String) {
       }
     })
 
-    windowSaver.loadFile(process.cwd() + 'resources/screensave_files/' + file);
+    windowSaver.loadFile(path.join(process.cwd(), 'resources/screensave_files/' + file));
     windowSaver.setAlwaysOnTop(true, 'screen-saver');
 
     windowSaver.webContents.on("did-finish-load", function () {

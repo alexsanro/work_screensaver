@@ -2,7 +2,6 @@ import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { FormBuilder, FormArray, FormGroup, FormControl } from '@angular/forms';
 import * as path from 'path';
 import { ElectronService } from '../core/services';
-import { throwError } from 'rxjs';
 import { ipcRenderer } from 'electron';
 const fs = require('fs');
 
@@ -75,7 +74,7 @@ export class SettingsComponent implements OnInit {
           settingsFormValues[key].file = path.basename(element.inputFileControl);
           this.copyFileToAssets(element.inputFileControl);
         } else {
-          settingsFormValues[key].file = element.file;
+          settingsFormValues[key].file = element.inputFileControl;
         }
         delete settingsFormValues[key].inputFileControl;
       });

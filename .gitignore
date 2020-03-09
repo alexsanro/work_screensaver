@@ -49,3 +49,4 @@ package-lock.json
 .DS_Store
 Thumbs.db
 commands/sonar_scanner.sh
+resources/*
