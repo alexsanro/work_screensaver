@@ -239,7 +239,7 @@ describe('SettingsComponent Empty mock file', () => {
 
   beforeEach(() => {
     mock({
-      'resources/data/data_config.json': '[{}]'
+      'resources/data/data_settings.json': '[{}]'
     }, {createCwd: false});
 
     fixture = TestBed.createComponent(SettingsComponent);

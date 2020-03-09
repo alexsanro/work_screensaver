@@ -53,7 +53,7 @@ function newWindowSettings(): BrowserWindow {
     minWidth: 500,
     maxHeight: 900,
     maxWidth: 700,
-    show: true,
+    show: false,
     title: 'Settings',
     focusable: true,
     frame: false,
@@ -70,6 +70,10 @@ function newWindowSettings(): BrowserWindow {
     slashes: true,
     hash: '/settings'
   }));
+
+  settingsWindow.on("ready-to-show", function(){
+    settingsWindow.show();
+  })
 
   globalShortcut.unregisterAll();
   
