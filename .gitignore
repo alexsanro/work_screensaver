@@ -50,3 +50,4 @@ package-lock.json
 Thumbs.db
 .scannerwork
 resources
+commands/sonar_scanner.sh
