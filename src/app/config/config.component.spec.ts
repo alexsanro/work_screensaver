@@ -25,10 +25,7 @@ describe('ConfigComponent', () => {
 
   beforeEach(() => {
     mock({
-      '/assets/data/data_config.json': '[{"label": "mock","file": "mock.gif","shortcut": "Alt+CommandOrControl+B"}]',
-      'dist/assets/data': mock.directory({
-        mode: 755
-      })
+      '/assets/data/data_config.json': '[{"label": "mock","file": "mock.gif","shortcut": "Alt+CommandOrControl+B"}]'
     });
 
     fixture = TestBed.createComponent(ConfigComponent);
@@ -109,82 +106,31 @@ describe('ConfigComponent', () => {
     expect(fakeIpc).toEqual('enableShortcuts');
   })
 
-  it('Throw ERROR when save empty fields click button', () => {
-    var titleDialog = null;
-    var contentDialgo = null;
-    spyOn(electronService.remote.dialog, 'showErrorBox').and.callFake((title, content) => {
-      titleDialog = title;
-      contentDialgo = content;
+  it('Throw ERROR when save empty fields', () => {
+    spyOn(electronService.remote.dialog, 'showErrorBox').and.callFake(function (title, content) {
+      expect(title).toEqual("Error 202");
+      expect(content).toEqual("There are many fields empties");
     })
+
+    expect(spyOn(component, 'checkEmptyValuesConfigForm').and.throwError).toThrowError()
 
     component.addNewGroupFields();
+
     document.getElementById("save-button").click();
 
-    expect(titleDialog).toEqual("Error 202");
-    expect(contentDialgo).toEqual("There are empty values!!");
   })
 
-  it('Save correctly click button', () => {
-
-    var ipcRenderSendMock = null;
-    spyOn(ipcRenderer, 'send').and.callFake((name) => {
-      ipcRenderSendMock = name;
+  it('Save correctly', () => {
+    
+    spyOn(ipcRenderer, 'send').and.callFake(function(name){
+      expect(name).toEqual("refreshMenuIcon");
     })
 
-    document.getElementById("save-button").click();
-    expect(ipcRenderSendMock).toEqual("refreshMenuIcon");
-  })
+    //console.log(component.itemsConfig.value)
 
-  it('Minimize window click button', () => {
-    document.getElementById("min-button").click();
-    var isMinimized = electronService.remote.getCurrentWindow().isMinimized();
-    expect(isMinimized).toBeTruthy();
-  })
-
-  it('Keydown shortcut input', () => {
-    var input = document.querySelectorAll("input[formControlName='shortcut']")[0]
-    var event = new KeyboardEvent("keydown", {
-      "key": "b",
-      'ctrlKey': true,
-      'altKey': true
-    });
-    input.dispatchEvent(event);
-    expect('b').toEqual(component.shortCutKeyDown)
-  })
-
-  it('Keyup shortcut input', () => {
-    var input = document.querySelectorAll("input[formControlName='shortcut']")[0]
-    var event = new KeyboardEvent("keyup");
-
-    component.shortCutKeyDown = "z";
-    input.dispatchEvent(event);
-
-    expect('Alt+CommandOrControl+z').toEqual(component.itemsConfig.value[0].shortcut)
-  })
-
-  it('Function change input file', () => {
-    var mockitoEvent = {
-      'target': {
-        'files':
-          [{
-            'path': 'mockito/mockito.gif'
-          }]
-      }
-    }
-
-    component.fileOnChange(mockitoEvent, 0);
-    expect('mockito/mockito.gif').toEqual(component.itemsConfig.value[0].inputFileControl)
-  })
-
-  it('Basename path', () => {
-    var file = component.convertPathFileToBasename('/mock/mock.gif');
-    expect('mock.gif').toEqual(file)
-  })
-
-  it('Remove field group with click', () => {
-    var prueba = fixture.debugElement.nativeElement.querySelector('button');
-    prueba.click();
-    //closeButton.item.click
+    console.log("ddd")
+    //document.getElementById("save-button").click();
+    //console.log(component.itemsConfig.value)
   })
 
 });
@@ -223,17 +169,15 @@ describe('ConfigComponent Empty mock file', () => {
     expect(formArraItems[0].inputFileControl).toEqual('');
   })
 
-  it('Throw ERROR when save empty fields click button', () => {
-    var titleDialog = null;
-    var contentDialgo = null;
-    spyOn(electronService.remote.dialog, 'showErrorBox').and.callFake((title, content) => {
-      titleDialog = title;
-      contentDialgo = content;
+  it('Throw ERROR when save empty fields', () => {
+
+    spyOn(electronService.remote.dialog, 'showErrorBox').and.callFake(function (title, content) {
+      expect(title).toEqual("Error 202");
+      expect(content).toEqual("There are many fields empties");
     })
 
-    document.getElementById("save-button").click();
+    expect(spyOn(component, 'checkEmptyValuesConfigForm').and.throwError).toThrowError()
 
-    expect(titleDialog).toEqual("Error 202");
-    expect(contentDialgo).toEqual("There are empty values!!");
+    document.getElementById("save-button").click();
   })
 });
