@@ -31,8 +31,16 @@
   "win": {
     "icon": "dist/favicon.ico",
     "target": [
-      "portable"
+      "nsis"
     ]
+  },
+  "nsis": {
+    "installerIcon": "src/favicon.ico",
+    "uninstallerIcon": "src/favicon.ico",
+    "uninstallDisplayName": "CPU Monitor",
+    "license": "license.txt",
+    "oneClick": false,
+    "allowToChangeInstallationDirectory": true
   },
   "mac": {
     "icon": "dist",
