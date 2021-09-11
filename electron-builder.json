@@ -1,5 +1,5 @@
 {
-  "productName": "angular-electron",
+  "productName": "workscreen-saver",
   "extraResources": [
       {
         "from": "./src/resources/",
@@ -32,15 +32,18 @@
     "icon": "dist/favicon.ico",
     "target": [
       "nsis"
-    ]
+    ],
+    "requestedExecutionLevel": "requireAdministrator"
   },
   "nsis": {
     "installerIcon": "src/favicon.ico",
     "uninstallerIcon": "src/favicon.ico",
-    "uninstallDisplayName": "CPU Monitor",
-    "license": "license.txt",
-    "oneClick": false,
-    "allowToChangeInstallationDirectory": true
+    "uninstallDisplayName": "workscreen-saver",
+    "license": "LICENSE",
+    "oneClick": true,
+    "perMachine": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true
   },
   "mac": {
     "icon": "dist",
