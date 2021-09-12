@@ -49,34 +49,34 @@ If you want use the APP like dev mode for windows or linux you need install some
 ### Installation and usage
 
 1. Clone the repo
-   ```sh
-   https://github.com/alexsanro/work_screensaver
-   ```
+     ```sh
+     https://github.com/alexsanro/work_screensaver
+     ```
 2. Open the project into Vscode use 'reopen in container'
 3. Install NPM packages
-   ```sh
-   npm install
-   ```
+     ```sh
+     npm install
+     ```
 4. Run test's 
-   ```sh
-   npm run test
-   ```
+     ```sh
+     npm run test
+     ```
 5. Build application
-  ```sh
-   npm run electron:windows
-   ```
+    ```sh
+    npm run electron:windows
+    ```
 
 
 **For use into the OS system:**
 
 6. Install NPM packages into OS system. 
-  ```sh
-   npm install
-   ```
+    ```sh
+    npm install
+    ```
 7. Run application in dev mode:
-  ```sh
-   npm run build:dev
-   ```
+    ```sh
+    npm run build:dev
+    ```
 
 
 <!-- LICENSE -->
