@@ -3,6 +3,11 @@ import * as url from 'url';
 import * as path from 'path';
 const fs = require('fs');
 const ioHook = require('iohook');
+const gotTheLock = app.requestSingleInstanceLock()
+
+if (!gotTheLock) {
+  app.quit()
+} 
 
 let tray: Tray = null;
 

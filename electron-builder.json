@@ -1,5 +1,5 @@
 {
-  "productName": "angular-electron",
+  "productName": "workscreen-saver",
   "extraResources": [
       {
         "from": "./src/resources/",
@@ -31,8 +31,19 @@
   "win": {
     "icon": "dist/favicon.ico",
     "target": [
-      "portable"
-    ]
+      "nsis"
+    ],
+    "requestedExecutionLevel": "requireAdministrator"
+  },
+  "nsis": {
+    "installerIcon": "src/favicon.ico",
+    "uninstallerIcon": "src/favicon.ico",
+    "uninstallDisplayName": "workscreen-saver",
+    "license": "LICENSE",
+    "oneClick": true,
+    "perMachine": true,
+    "createDesktopShortcut": true,
+    "createStartMenuShortcut": true
   },
   "mac": {
     "icon": "dist",

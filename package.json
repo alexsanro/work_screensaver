@@ -1,11 +1,11 @@
 {
-  "name": "angular-electron",
-  "version": "6.4.1",
-  "description": "Angular 8 with Electron (Typescript + SASS + Hot Reload)",
-  "homepage": "https://github.com/maximegris/angular-electron",
+  "name": "workscreen-saver",
+  "version": "0.1.0",
+  "description": "Angular 8 with Electron APP screensaver for the your work",
+  "homepage": "https://github.com/alexsanro/work_screensaver",
   "author": {
-    "name": "Maxime GRIS",
-    "email": "maxime.gris@gmail.com"
+    "name": "alexsanro",
+    "email": "alexsanro1@gmail.com"
   },
   "keywords": [
     "angular",
@@ -67,7 +67,7 @@
     "conventional-changelog-cli": "2.0.32",
     "core-js": "3.1.4",
     "electron": "8.0.0",
-    "electron-builder": "21.2.0",
+    "electron-builder": "22.11.7",
     "electron-reload": "1.5.0",
     "eslint": "6.6.0",
     "eslint-plugin-import": "2.18.2",
