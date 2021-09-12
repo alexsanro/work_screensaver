@@ -1,109 +1,91 @@
-[![Angular Logo](https://www.vectorlogo.zone/logos/angular/angular-icon.svg)](https://angular.io/) [![Electron Logo](https://www.vectorlogo.zone/logos/electronjs/electronjs-icon.svg)](https://electronjs.org/)
+<!-- PROJECT LOGO -->
+<br />
+<p align="center">
+  <a href="https://github.com/othneildrew/Best-README-Template">
+    <img src="src/favicon.ico" alt="Logo" width="80" height="80">
+  </a>
 
-![Maintained][maintained-badge]
-[![Travis Build Status][build-badge]][build]
-[![Make a pull request][prs-badge]][prs]
-[![License](http://img.shields.io/badge/Licence-MIT-brightgreen.svg)](LICENSE.md)
+  <h3 align="center">workscreen-saver</h3>
 
-[![Watch on GitHub][github-watch-badge]][github-watch]
-[![Star on GitHub][github-star-badge]][github-star]
-[![Tweet][twitter-badge]][twitter]
+  <p align="center">
+    An awesome workscreen that you can customize as you wish.
+    <br />
+    <a href="https://github.com/alexsanro/work_screensaver/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/alexsanro/work_screensaver/issues">Request Feature</a>
+  </p>
+</p>
 
-# Introduction
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-Bootstrap and package your project with Angular 8 and Electron (Typescript + SASS + Hot Reload) for creating Desktop applications.
+The project arises from the fact that whenever one left the computer unlocked at work, colleagues changed the wallpaper, changed the computer settings or any other joke you can imagine.
 
-Currently runs with:
+As a result of all this arises the idea of creating a configurable screensaver with any type of image or HTML file to "lock" the PC screen and say that you are going to do or where you are. 
 
-- Angular v8.2.14
-- Electron v7.1.7
-- Electron Builder v21.2.0
+### Built With
 
-With this sample, you can :
-
-- Run your app in a local development environment with Electron & Hot reload
-- Run your app in a production environment
-- Package your app into an executable file for Linux, Windows & Mac
-
-/!\ Hot reload only pertains to the renderer process. The main electron process is not able to be hot reloaded, only restarted.
-
-/!\ Angular 8.x CLI needs Node 10.9 or later to works correctly.
-
-## Getting Started
-
-Clone this repository locally :
-
-``` bash
-git clone https://github.com/maximegris/angular-electron.git
-```
-
-Install dependencies with npm :
-
-``` bash
-npm install
-```
-
-There is an issue with `yarn` and `node_modules` when the application is built by the packager. Please use `npm` as dependencies manager.
+This section should list any major frameworks that you built your project using. Leave any add-ons/plugins for the acknowledgements section. Here are a few examples.
+* [Bootstrap](https://ng-bootstrap.github.io/#/home)
+* [Angular](https://angular.io/)
+* [Electron](https://www.electronjs.org/)
+* [Electron-Angular](https://github.com/maximegris/angular-electron)
 
 
-If you want to generate Angular components with Angular-cli , you **MUST** install `@angular/cli` in npm global context.
-Please follow [Angular-cli documentation](https://github.com/angular/angular-cli) if you had installed a previous version of `angular-cli`.
+<!-- GETTING STARTED -->
+### Prerequisites
 
-``` bash
-npm install -g @angular/cli
-```
+This application is prepared for use with Docker, is most easly for use. But if you want make more easy you need Vscode for work with remote containers method that microsoft have implementated.
 
-## To build for development
+This are prerrequisites for use only with Docker, and test the application only with a build of this (App for windos (.exe))
+- **Docker desktop for windows**
+- **Vscode**
+- **Plugin 'remote containers' for Vscode**
 
-- **in a terminal window** -> npm start
+If you want use the APP like dev mode for windows or linux you need install some prerequisites into the OS:
 
-Voila! You can use your Angular + Electron app in a local development environment with hot reload !
+- **NPM** 
 
-The application code is managed by `main.ts`. In this sample, the app runs with a simple Angular App (http://localhost:4200) and an Electron window.
-The Angular component contains an example of Electron and NodeJS native lib import.
-You can disable "Developer Tools" by commenting `win.webContents.openDevTools();` in `main.ts`.
+### Installation and usage
 
-## Included Commands
+1. Clone the repo
+   ```sh
+   https://github.com/alexsanro/work_screensaver
+   ```
+2. Open the project into Vscode use 'reopen in container'
+3. Install NPM packages
+   ```sh
+   npm install
+   ```
+4. Run test's 
+   ```sh
+   npm run test
+   ```
+5. Build application
+  ```sh
+   npm run electron:windows
+   ```
 
-|Command|Description|
-|--|--|
-|`npm run ng:serve:web`| Execute the app in the browser |
-|`npm run build`| Build the app. Your built files are in the /dist folder. |
-|`npm run build:prod`| Build the app with Angular aot. Your built files are in the /dist folder. |
-|`npm run electron:local`| Builds your application and start electron
-|`npm run electron:linux`| Builds your application and creates an app consumable on linux system |
-|`npm run electron:windows`| On a Windows OS, builds your application and creates an app consumable in windows 32/64 bit systems |
-|`npm run electron:mac`|  On a MAC OS, builds your application and generates a `.app` file of your application that can be run on Mac |
 
-**Your application is optimised. Only /dist folder and node dependencies are included in the executable.**
+**For use into the OS system:**
 
-## You want to use a specific lib (like rxjs) in electron main thread ?
+6. Install NPM packages into OS system. 
+```sh
+ npm install
+ ```
+7. Run application in dev mode:
+```sh
+ npm run build:dev
+ ```
 
-YES! You can do it! Just by importing your library in npm dependencies section (not **devDependencies**) with `npm install --save`. It will be loaded by electron during build phase and added to your final package. Then use your library by importing it in `main.ts` file. Quite simple, isn't it ?
 
-## Browser mode
+<!-- LICENSE -->
+## License
 
-Maybe you want to execute the application in the browser with hot reload ? Just run `npm run ng:serve:web`.
-**Note that you can't use Electron or NodeJS native libraries in this case.** Please check `providers/electron.service.ts` to watch how conditional import of electron/Native libraries is done.
+Distributed under the MIT License. See `LICENSE` for more information.
 
-## Branch & Packages version
 
-- Angular 4 & Electron 1 : Branch [angular4](https://github.com/maximegris/angular-electron/tree/angular4)
-- Angular 5 & Electron 1 : Branch [angular5](https://github.com/maximegris/angular-electron/tree/angular5)
-- Angular 6 & Electron 3 : Branch [angular6](https://github.com/maximegris/angular-electron/tree/angular6)
-- Angular 7 & Electron 3 : Branch [angular7](https://github.com/maximegris/angular-electron/tree/angular7)
-- Angular 8 & Electron 7 : (master)
-
-[build-badge]: https://travis-ci.org/maximegris/angular-electron.svg?branch=master&style=style=flat-square
-[build]: https://travis-ci.org/maximegris/angular-electron
-[license-badge]: https://img.shields.io/badge/license-Apache2-blue.svg?style=style=flat-square
-[license]: https://github.com/maximegris/angular-electron/blob/master/LICENSE.md
-[prs-badge]: https://img.shields.io/badge/PRs-welcome-brightgreen.svg?style=flat-square
-[prs]: http://makeapullrequest.com
-[github-watch-badge]: https://img.shields.io/github/watchers/maximegris/angular-electron.svg?style=social
-[github-watch]: https://github.com/maximegris/angular-electron/watchers
-[github-star-badge]: https://img.shields.io/github/stars/maximegris/angular-electron.svg?style=social
-[github-star]: https://github.com/maximegris/angular-electron/stargazers
-[twitter]: https://twitter.com/intent/tweet?text=Check%20out%20angular-electron!%20https://github.com/maximegris/angular-electron%20%F0%9F%91%8D
-[twitter-badge]: https://img.shields.io/twitter/url/https/github.com/maximegris/angular-electron.svg?style=social
-[maintained-badge]: https://img.shields.io/badge/maintained-yes-brightgreen
+<!-- ACKNOWLEDGEMENTS -->
+## Acknowledgements
+* [Choose an Open Source License](https://choosealicense.com)
+* [Icon](https://www.flaticon.com/free-icon/computer_4472719)
