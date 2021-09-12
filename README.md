@@ -37,7 +37,7 @@ This section should list any major frameworks that you built your project using.
 
 This application is prepared for use with Docker, is most easly for use. But if you want make more easy you need Vscode for work with remote containers method that microsoft have implementated.
 
-This are prerrequisites for use only with Docker, and test the application only with a build of this (App for windos (.exe))
+This are prerrequisites for use only with Docker, and test the application only with a build of this (App for windows (.exe))
 - **Docker desktop for windows**
 - **Vscode**
 - **Plugin 'remote containers' for Vscode**
@@ -70,13 +70,13 @@ If you want use the APP like dev mode for windows or linux you need install some
 **For use into the OS system:**
 
 6. Install NPM packages into OS system. 
-```sh
- npm install
- ```
+  ```sh
+   npm install
+   ```
 7. Run application in dev mode:
-```sh
- npm run build:dev
- ```
+  ```sh
+   npm run build:dev
+   ```
 
 
 <!-- LICENSE -->
