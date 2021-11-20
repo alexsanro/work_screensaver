@@ -37,9 +37,7 @@ pipeline {
         }
         stage('Upload Release'){
             when {
-                not {
-                    branch 'master'
-                }
+                branch 'master'
             }
             steps{        
                 sh(script: "./ci_cd/release.sh", label: "Upload and make release");
