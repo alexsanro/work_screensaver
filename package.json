@@ -33,7 +33,7 @@
     "electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:serve-tsc && electron . --serve",
     "electron:local": "npm run build:dev && electron .",
     "electron:linux": "npm run build:prod && electron-builder build --linux",
-    "electron:windows": "npm run build:prod && electron-builder build --windows",
+    "electron:windows": "npm run build:prod && ELECTRON_BUILDER_BINARIES_MIRROR=https://npm.taobao.org/mirrors/electron-builder-binaries/ ELECTRON_MIRROR=http://npm.taobao.org/mirrors/electron/ electron-builder build --windows --publish=never",
     "electron:mac": "npm run build:prod && electron-builder build --mac",
     "test": "npm run ng test --code-coverage",
     "e2e": "npm run build:prod && mocha --timeout 300000 --require ts-node/register e2e/**/*.spec.ts",
