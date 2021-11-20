@@ -40,6 +40,7 @@ pipeline {
                 branch 'master'
             }
             steps{        
+                
                 sh(script: "./ci_cd/release.sh", label: "Upload and make release");
             }
         }
